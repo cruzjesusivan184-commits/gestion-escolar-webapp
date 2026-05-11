@@ -59,6 +59,9 @@ export class RegistroMaestros implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.maestro = this.maestrosService.esquemaMaestro();
+    // Rol del usuario
+    this.maestro.rol = this.rol;
   }
 
   //Funciones para password
@@ -105,7 +108,17 @@ export class RegistroMaestros implements OnInit {
 
     // Validar si las contraseñas coinciden solo si no se está editando, ya que en la edición no es obligatorio cambiar la contraseña
     if(this.maestro.password === this.maestro.confirmar_password){
-      // TODO: Aquí iría la lógica para registrar al maestro, como llamar a un servicio que se encargue de hacer la petición al backend
+      //Lógica para registrar el maestro, conectando con el backend y mostrando notificaciones de éxito o error según corresponda
+      this.maestrosService.registrarMaestro(this.maestro).subscribe({
+        next: (response) => {
+          this.notificationService.success("Maestro registrado exitosamente");
+          this.router.navigate(['/maestros']);
+        },
+        error: (error) => {
+          console.error("Error al registrar el maestro: ", error);
+          this.notificationService.error("Error al registrar el maestro. Por favor, inténtalo de nuevo.");
+        }
+      });
     }else{
       this.notificationService.error("Las contraseñas no coinciden");
       this.maestro.password="";
@@ -126,19 +139,19 @@ export class RegistroMaestros implements OnInit {
   // Funciones para los checkbox
   public checkboxChange(event:any){
     if(event.checked){
-      this.maestro.materias_json.push(event.source.value)
+      this.maestro.materias_array.push(event.source.value)
     }else{
-      this.maestro.materias_json.forEach((materia: any, i: any) => {
+      this.maestro.materias_array.forEach((materia: any, i: any) => {
         if(materia === event.source.value){
-          this.maestro.materias_json.splice(i,1)
+          this.maestro.materias_array.splice(i,1)
         }
       });
     }
   }
 
   public revisarSeleccion(nombre: string){
-    if(this.maestro.materias_json){
-      const busqueda = this.maestro.materias_json.find((element: string)=>element===nombre);
+    if(this.maestro.materias_array){
+      const busqueda = this.maestro.materias_array.find((element: string)=>element===nombre);
       if(busqueda !== undefined){
         return true;
       }else{

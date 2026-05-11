@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ErrorsService } from './tools/errors-service';
 import { ValidatorService } from './tools/validator-service';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { AuthServices } from './auth-services';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +14,17 @@ export class MaestrosService {
   constructor(
     private validatorService: ValidatorService,
     private errorService: ErrorsService,
+    private http: HttpClient,
+    private authService: AuthServices
   ) {}
+
+  /** Genera los HttpHeaders con el token de sesión si existe */
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.authService.getSessionToken();
+    return token
+      ? new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` })
+      : new HttpHeaders({ 'Content-Type': 'application/json' });
+  }
 
   public esquemaMaestro(){
     return {
@@ -94,5 +108,10 @@ export class MaestrosService {
     }
 
     return error;
+  }
+
+  //Función para registrar un maestro, conectando con el backend
+  public registrarMaestro(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.url_api}/maestros/`, data, { headers: this.getAuthHeaders() });
   }
 }

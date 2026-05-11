@@ -41,4 +41,15 @@ export class AdminScreen implements OnInit{
       }
     });
   }
+
+  //Metodo para editar un administrador, se redirige a la pantalla de edición con el id del administrador seleccionado
+  public goEditar(id: number): void {
+    this.router.navigate(['/editar-admin', id]);
+  }
+
+  //Metodo para eliminar un administrador, se muestra una confirmación antes de eliminar
+  public delete(id: number): void {
+
+  }
+
 }
