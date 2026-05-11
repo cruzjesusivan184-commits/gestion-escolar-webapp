@@ -114,4 +114,9 @@ export class MaestrosService {
   public registrarMaestro(data: any): Observable<any> {
     return this.http.post<any>(`${environment.url_api}/maestros/`, data, { headers: this.getAuthHeaders() });
   }
+
+  //Función para obtener la lista de maestros registrados
+  public obtenerListaMaestros(): Observable<any> {
+    return this.http.get<any>(`${environment.url_api}/lista-maestros/`, { headers: this.getAuthHeaders() });
+  }
 }
