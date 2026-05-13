@@ -125,6 +125,11 @@ table {
   opacity: 1!important;
 }
 
+/* Encabezado de columnas de acción centrado */
+::ng-deep .th-accion {
+  text-align: center !important;
+}
+
 /* Acciones */
 .td-editar {
   color: #0092B8 !important;

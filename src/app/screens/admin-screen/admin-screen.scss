@@ -114,6 +114,17 @@ table {
   opacity: 1 !important;
 }
 
+/* Encabezado de columnas de acción centrado */
+.th-accion {
+  text-align: center !important;
+}
+
+/* Encabezados de tabla en negritas */
+thead th {
+  font-family: Nexa-Bold !important;
+  font-weight: bold;
+}
+
 /* Acciones */
 .td-editar {
   color: #0092B8 !important;
