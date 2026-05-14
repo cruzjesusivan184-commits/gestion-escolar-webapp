@@ -19,6 +19,10 @@ export const routes: Routes = [
         path: 'registro-usuarios',
         loadComponent: () => import('./screens/registro-usuarios-screen/registro-usuarios-screen').then(m => m.RegistroUsuariosScreen),
       },
+      {
+        path: 'registro-usuarios/:rol/:id',
+        loadComponent: () => import('./screens/registro-usuarios-screen/registro-usuarios-screen').then(m => m.RegistroUsuariosScreen),
+      },
     ]
   },
 
