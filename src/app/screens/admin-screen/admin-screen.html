@@ -1,3 +1,22 @@
+<!-- admin-screen.html
+     Pantalla de gestión de administradores del sistema.
+     Ruta: /administrador
+
+     A diferencia de alumnos-screen y maestros-screen, esta pantalla usa una
+     tabla HTML estándar con Bootstrap (<table class="table table-striped">)
+     en lugar de mat-table. No tiene búsqueda ni paginación integrada.
+
+     @for (admin of lista_admins; track admin.id):
+       Sintaxis Angular 17+ para iterar el array. track admin.id optimiza
+       el rendimiento: Angular reutiliza los nodos DOM existentes en lugar de
+       destruirlos y recrearlos cuando cambia la lista.
+
+     @if / @else (sin ng-container):
+       Muestra la tabla si lista_admins.length > 0, o el alert de "no hay registros"
+       en el bloque @else. Es la versión moderna de *ngIf + *ngIf="!condition".
+
+     (click)="goEditar(admin.id)": al hacer clic en el ícono de edición,
+     navega a /registro-usuarios/administrador/:id para editar el admin seleccionado. -->
 <div class="wrapper main-content-admin">
   <div class="header-home-admin">
   </div>

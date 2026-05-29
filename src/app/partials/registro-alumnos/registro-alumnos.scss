@@ -3,6 +3,15 @@
    Estilos del formulario de registro y edición de alumnos.
    Reutiliza la misma estructura de layout que registro-admin.scss
    (wrapper > section-registro > body-registro) con ajustes móvil (≤700px).
+
+   Estructura Flexbox:
+     .wrapper: fila centrada horizontalmente (justify-content: center).
+     .body-registro: columna con gap entre campos (flex-direction: column, gap: 2.2rem).
+     .section-buttons: fila con botones en extremos opuestos
+       (justify-content: space-between → "Cancelar" a la izq, "Registrar" a la der).
+
+   En móvil (≤700px): .section-buttons cambia a flex-direction: column para que
+   los botones queden apilados y no se desborden en pantallas pequeñas.
    ============================================================ */
 
 /* Contenedor raíz del formulario */

@@ -1,3 +1,30 @@
+/* ============================================================
+   login-screen.scss
+   Estilos de la pantalla de inicio de sesión del sistema.
+
+   Layout general:
+     .login-new: pantalla completa (min-height: 100vh) con fondo degradado.
+     .login-container: tarjeta blanca de dos columnas (flex-direction: row).
+       - .login-form-section: columna izquierda con el formulario.
+       - .login-illustration-section: columna derecha con imagen y mensaje.
+
+   Flexbox en el formulario:
+     .login-form usa flex-direction: column para apilar los campos verticalmente
+     con un gap uniforme de 18px entre cada grupo de formulario.
+
+   Animaciones (@keyframes):
+     fadeInUp, fadeInLeft, fadeInRight: el formulario y la imagen aparecen
+     con un efecto de deslizamiento desde diferentes direcciones al cargar la página.
+     animation-delay: retrasa el inicio de la animación para crear un efecto
+     secuencial (primero aparece el formulario, luego los campos, luego la imagen).
+     animation-fill-mode: backwards mantiene el estado inicial (opacidad 0)
+     hasta que comienza la animación.
+
+   Media queries responsivos:
+     @media (max-width: 700px): apila las columnas (flex-direction: column)
+     para mostrar el formulario y la imagen en pantalla completa en móviles.
+   ============================================================ */
+
 // Animaciones
 @keyframes fadeInUp {
   from {

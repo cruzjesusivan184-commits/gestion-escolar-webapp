@@ -15,11 +15,16 @@ import { EliminarUserModal } from '../../modals/eliminar-user-modal/eliminar-use
  * MaestrosScreen
  * ----------------------------------------------------------
  * Pantalla de gestión de maestros del sistema.
- * Muestra una tabla Material con paginación, ordenamiento y filtrado por nombre.
- * Permite editar o eliminar cada maestro registrado.
+ * Ruta: /maestros (protegida por AuthGuard)
+ * Endpoints consumidos: GET /lista-maestros/, DELETE /maestros/?id=X
  *
- * Ruta: /maestros
- * Endpoint(s) consumido(s): GET /lista-maestros/, DELETE /maestros/
+ * Idéntica en estructura a AlumnosScreen: usa MatTableDataSource<DatosMaestro>
+ * con @ViewChild para MatPaginator y MatSort (asignados en ngAfterViewInit).
+ *
+ * Diferencia importante en delete():
+ *   Un maestro puede eliminarse a sí mismo, pero solo el administrador puede
+ *   eliminar a otros maestros. La lógica verifica el rol y el id del usuario
+ *   autenticado antes de abrir el modal de confirmación.
  */
 @Component({
   selector: 'app-maestros-screen',
@@ -70,6 +75,11 @@ export class MaestrosScreen implements OnInit {
     this.obtenerMaestros();
   }
 
+  /**
+   * ngAfterViewInit: asigna el paginador y el sort al dataSource.
+   * Se hace aquí (no en ngOnInit) porque @ViewChild solo tiene valor
+   * después de que Angular renderiza el DOM con los elementos <mat-paginator> y [matSort].
+   */
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -136,13 +146,25 @@ export class MaestrosScreen implements OnInit {
 
   // Abre el modal de confirmación para eliminar el maestro con el id seleccionado
   public delete(idUser: number) {
-    const dialogRef = this.dialog.open(EliminarUserModal, {
-      data: { id: idUser, tipo: 'maestro' }
-    });
-    dialogRef.afterClosed().subscribe((resultado) => {
-      if (resultado) {
-        this.obtenerMaestros();
-      }
-    });
+    const idUserSession = Number(this.authService.getUserId());
+
+    if (this.rol === 'administrador' || (this.rol === 'maestro' && idUserSession === idUser)) {
+      const dialogRef = this.dialog.open(EliminarUserModal,{
+        data: { id: idUser, rol: 'maestro' },
+        height: '288px',
+        width: '328px',
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if(result.isDelete){
+          this.obtenerMaestros();
+        }else{
+          this.notificationService.error("Maestro no se ha podido eliminar.");
+        }
+      });
+    }else{
+      this.notificationService.error("No tienes permiso para eliminar a este maestro.");
+    }
+
   }
 }

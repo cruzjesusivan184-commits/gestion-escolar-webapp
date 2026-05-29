@@ -1,7 +1,17 @@
+<!-- dashboard-layout.html
+     Layout del dashboard (área protegida tras iniciar sesión).
+     Estructura:
+       - app-navbar-user: incluye el sidebar lateral (desktop) y la topbar superior.
+                          También gestiona el sidebar deslizable en móvil.
+       - dashboard-body > dashboard-content: zona donde se inyecta la pantalla activa.
+     El <router-outlet> renderiza el componente de la ruta hija activa
+     (HomeScreen, AdminScreen, AlumnosScreen, etc.). -->
 <div class="dashboard-layout">
+  <!-- Navbar con sidebar integrado; controla la navegación y el perfil de usuario -->
   <app-navbar-user></app-navbar-user>
   <div class="dashboard-body">
     <div class="dashboard-content">
+      <!-- El router-outlet inserta aquí la pantalla correspondiente a la ruta activa -->
       <router-outlet></router-outlet>
     </div>
   </div>

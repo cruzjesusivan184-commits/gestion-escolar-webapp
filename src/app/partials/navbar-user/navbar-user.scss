@@ -1,3 +1,28 @@
+/* ============================================================
+   navbar-user.scss
+   Estilos del componente NavbarUser: sidebar lateral + topbar superior.
+   Incluye soporte para tema claro/oscuro mediante variables CSS (:root)
+   y un sidebar deslizable (slide-in) en vista móvil con animación CSS.
+
+   Variables CSS (:root):
+     Permiten cambiar el tema (claro/oscuro) en tiempo de ejecución sin
+     recargar la página. El componente TypeScript las actualiza con
+     document.documentElement.style.setProperty(key, value) al hacer toggle.
+
+   Flexbox en el sidebar (.scoop-side-navbar):
+     flex-direction: column → los ítems del menú se apilan verticalmente.
+     justify-content / align-items gestionan distribución y alineación.
+
+   ::ng-deep (en este archivo no se usa, pero sí en registros):
+     Si necesitaras sobrescribir estilos de un componente de Angular Material
+     desde un componente padre, usarías ::ng-deep antes del selector.
+     Esto "perfora" la encapsulación de estilos (View Encapsulation).
+
+   Animación de sidebar móvil:
+     transform: translateX(-100%) → el sidebar está fuera de la pantalla.
+     Con la clase .mobile-open → translateX(0), deslizándose hacia adentro.
+   ============================================================ */
+
 // Palette CSS variables
 :root {
   --background-main: #f4f7fb;

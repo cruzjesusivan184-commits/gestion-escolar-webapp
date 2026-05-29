@@ -1,6 +1,13 @@
-<!-- Layout de autenticación (login/registro) -->
+<!-- auth-layout.html
+     Layout de autenticación: envuelve las pantallas públicas (login, registro).
+     No incluye navbar ni sidebar. El <router-outlet> renderiza la pantalla
+     correspondiente a la ruta hija activa (/login, /registro-usuarios).
+     Las clases Bootstrap (min-vh-100, d-flex, flex-grow-1) garantizan que
+     el contenido ocupe toda la altura visible de la ventana. -->
 <div class="min-vh-100 d-flex flex-column">
   <main class="flex-grow-1">
+    <!-- El router-outlet es el punto de inserción donde Angular coloca
+         el componente de la ruta activa (LoginScreen o RegistroUsuariosScreen) -->
     <router-outlet></router-outlet>
   </main>
 </div>

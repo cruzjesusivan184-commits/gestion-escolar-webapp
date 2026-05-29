@@ -1,3 +1,22 @@
+/* ============================================================
+   maestros-screen.scss
+   Estilos de la pantalla de gestión de maestros.
+   Idéntica en estructura a alumnos-screen.scss.
+
+   .main-content-maestros { margin-left: 220px }:
+     Compensa el sidebar fijo de 220px de ancho en desktop.
+     En móvil (<992px) se anula (margin-left: 0) porque el sidebar es deslizable.
+
+   .table-scroll-wrapper:
+     Contenedor con overflow-x: auto para scroll horizontal de la tabla.
+     La tabla tiene min-width: 1200px para mostrar todas sus columnas, por lo que
+     en pantallas más angostas el usuario puede hacer scroll horizontal.
+
+   Tipografía fluida con clamp():
+     clamp(min, preferido, max) permite tamaños de fuente que se adaptan al viewport
+     sin necesidad de media queries adicionales para cada breakpoint.
+   ============================================================ */
+
 // Compensa el sidebar en desktop
 .main-content-maestros {
   margin-left: 220px;

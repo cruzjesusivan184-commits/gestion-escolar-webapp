@@ -1,3 +1,27 @@
+/* ============================================================
+   alumnos-screen.scss
+   Estilos de la pantalla de gestión de alumnos.
+
+   .main-content-alumnos { margin-left: 220px }:
+     Compensa el ancho del sidebar fijo en desktop. Sin este margen,
+     el contenido se superpondría al sidebar. En móvil (<992px) se
+     cancela (margin-left: 0) porque el sidebar es deslizable y no ocupa espacio.
+
+   .table-scroll-wrapper:
+     Permite scroll horizontal para que la tabla (min-width: 1400px)
+     no se desborde en pantallas pequeñas. El paginador está dentro
+     del mismo wrapper para que haga scroll junto con la tabla.
+
+   ::ng-deep .mat-mdc-table:
+     Angular Material renderiza la tabla con clases internas (.mat-mdc-*)
+     que no son alcanzables por los estilos del componente. ::ng-deep
+     perfora la encapsulación para forzar table-layout: fixed.
+
+   Variables CSS (var(--table-bg), var(--text-main)):
+     Se definen en navbar-user.scss y se cambian al hacer toggle de tema.
+     La tabla respeta automáticamente el tema claro/oscuro sin CSS adicional.
+   ============================================================ */
+
 // Compensa el sidebar en desktop
 .main-content-alumnos {
   margin-left: 220px;

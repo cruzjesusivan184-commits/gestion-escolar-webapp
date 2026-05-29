@@ -1,3 +1,28 @@
+<!-- registro-maestros.html
+     Formulario de registro y edición de maestros.
+     Se usa como componente hijo de RegistroUsuariosScreen cuando el tipo
+     de usuario seleccionado es "maestro".
+
+     En modo registro muestra campos de contraseña (@if !editar).
+     En modo edición los oculta para no forzar el cambio de contraseña.
+
+     mat-select + mat-option: lista desplegable de Angular Material.
+     [(ngModel)] mantiene sincronizado el valor seleccionado con maestro.area_investigacion.
+     @for (sintaxis Angular 17+): itera el array `areas` para generar las opciones.
+
+     mat-checkbox (sección de materias):
+       (change)="checkboxChange($event)" llama al método del componente cada
+       vez que el usuario marca o desmarca una materia. El método agrega o
+       quita la materia del array maestro.materias_array.
+       [checked]="revisarSeleccion(materia.nombre)" preselecciona los checkboxes
+       en modo edición revisando si la materia ya estaba registrada.
+
+     mat-datepicker: widget de calendario para seleccionar fecha de nacimiento.
+     (dateChange)="changeFecha($event)" convierte el Date del datepicker
+     al formato ISO 'YYYY-MM-DD' que espera el backend Django.
+
+     mat-radio-group + mat-radio-button: selección exclusiva para el campo campus.
+     [(ngModel)] mantiene el valor seleccionado en maestro.campus. -->
 <!-- Formulario de registro y edición de maestros.
      En modo registro muestra campos de contraseña; en modo edición los oculta (@if !editar).
      Los checkboxes de materias usan checkboxChange() para actualizar materias_array. -->

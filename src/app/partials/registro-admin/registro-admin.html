@@ -1,3 +1,21 @@
+<!-- registro-admin.html
+     Formulario de registro y edición de administradores.
+     Se usa como componente hijo de RegistroUsuariosScreen cuando
+     el tipo de usuario seleccionado es "administrador".
+
+     [(ngModel)]: two-way data binding — vincula el campo HTML con la
+     propiedad del objeto `admin` en el componente. Cualquier cambio en
+     el input actualiza automáticamente la variable y viceversa.
+
+     @if (errors.campo): muestra el mensaje de error solo si existe ese
+     campo en el objeto `errors`. Es la nueva sintaxis de Angular 17+.
+
+     @if (!editar): en modo edición, oculta los campos de contraseña
+     para no obligar al usuario a cambiarla al actualizar sus datos.
+
+     mat-form-field + matInput: componentes de Angular Material que
+     proveen el estilo outline, label flotante, hint y mensajes de error
+     integrados, superiores a un input HTML puro en accesibilidad y estilo. -->
 <!-- Formulario de registro para administradores -->
 <div class="wrapper">
   <div class="section-registro">

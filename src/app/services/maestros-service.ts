@@ -6,15 +6,32 @@ import { environment } from '../../environments/environment';
 import { AuthServices } from './auth-services';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+/**
+ * MaestrosService
+ * ----------------------------------------------------------
+ * Servicio de datos para la gestión de maestros.
+ * Centraliza todas las peticiones HTTP al backend y la validación frontend
+ * del formulario de registro/edición de maestros.
+ *
+ * Endpoints consumidos:
+ *   POST   /maestros/        — registrarMaestro()
+ *   GET    /lista-maestros/  — obtenerListaMaestros()
+ *   GET    /maestros/?id=X   — obtenerMaestroPorId()
+ *   PUT    /maestros/        — actualizarMaestro()
+ *   DELETE /maestros/?id=X   — eliminarMaestro()
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class MaestrosService {
 
   constructor(
+    // ValidatorService y ErrorsService validan el formulario antes de llamar al backend
     private validatorService: ValidatorService,
     private errorService: ErrorsService,
+    // HttpClient realiza las peticiones HTTP
     private http: HttpClient,
+    // AuthServices provee el token JWT para los headers de autenticación
     private authService: AuthServices
   ) {}
 

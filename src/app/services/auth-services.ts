@@ -9,7 +9,33 @@ import { environment } from '../../environments/environment';
 import { ErrorsService } from './tools/errors-service';
 import { ValidatorService } from './tools/validator-service';
 
-//Estas son variables para las cookies
+/**
+ * AuthServices
+ * ----------------------------------------------------------
+ * Servicio central de autenticación y sesión del sistema.
+ * Responsabilidades:
+ *   1. Validar credenciales en el frontend antes de llamar al backend.
+ *   2. Enviar la petición POST /login/ al backend Django y recibir el token JWT.
+ *   3. Persistir el token y datos del usuario en cookies seguras.
+ *   4. Exponer helpers de rol (isAdmin, isTeacher, isStudent) que usan los
+ *      componentes para mostrar/ocultar elementos de la UI.
+ *
+ * ¿Qué es un Observable y por qué se usa .subscribe()?
+ *   HttpClient.post() retorna un Observable, que es como una "promesa mejorada":
+ *   no ejecuta la petición HTTP hasta que alguien hace .subscribe().
+ *   En el .subscribe() se pasan dos callbacks: next (éxito) y error (fallo).
+ *
+ * ¿Qué es JWT (JSON Web Token)?
+ *   Es un token firmado que el backend genera al hacer login. El frontend lo
+ *   guarda en una cookie y lo envía en cada petición en el header:
+ *     Authorization: Bearer <token>
+ *   El backend verifica la firma y otorga acceso si es válido, sin necesitar
+ *   guardar sesiones en la base de datos.
+ *
+ * Endpoints consumidos: POST /login/, GET /logout/, GET /me/
+ */
+
+// Nombres de las cookies donde se persisten los datos de sesión del usuario
 const session_cookie_name = 'gestion-escolar-token';
 const user_email_cookie_name = 'gestion-escolar-email';
 const user_id_cookie_name = 'gestion-escolar-user_id';
@@ -22,14 +48,23 @@ const group_name_cookie_name = 'gestion-escolar-group_name';
 export class AuthServices {
 
   constructor(
+    // HttpClient: servicio de Angular para hacer peticiones HTTP al backend
     private http: HttpClient,
+    // Router: permite navegar programáticamente (ej. ir a /login tras cerrar sesión)
     private router: Router,
+    // CookieService (ngx-cookie-service): abstrae lectura/escritura de cookies del navegador
     private cookieService: CookieService,
+    // ValidatorService y ErrorsService: validan y formatean errores ANTES de llamar al backend
     private validatorService: ValidatorService,
     private errorService: ErrorsService,
   ) {}
 
-  // Función para validar el login
+  /**
+   * validarLogin
+   * Valida los campos del formulario de login en el frontend ANTES de llamar al backend.
+   * Retorna un objeto con mensajes de error por campo; si está vacío, no hay errores.
+   * Se llama en login-screen.ts antes de hacer el POST /login/.
+   */
   public validarLogin(username: string, password: string){
     const data:any = {
       "username": username,
@@ -56,7 +91,13 @@ export class AuthServices {
 
   }
 
-  //Creamos el post para el login
+  /**
+   * login
+   * Envía las credenciales al endpoint POST /login/ del backend.
+   * Retorna un Observable<any>: el componente debe hacer .subscribe() para
+   * ejecutar la petición y recibir la respuesta (token + datos del usuario).
+   * Los headers indican al servidor que enviamos JSON.
+   */
   public login(username: string, password: string): Observable<any> {
     const data = {
       "username": username,
@@ -68,14 +109,26 @@ export class AuthServices {
     return this.http.post<any>(`${environment.url_api}/login/`, data, headers);
   }
 
-  //Cerrar sesión
+  /**
+   * logout
+   * Llama al endpoint GET /logout/ para invalidar el token en el backend.
+   * Envía el token en el header Authorization: Bearer <token> para que el
+   * backend sepa qué sesión eliminar.
+   * Después de hacer .subscribe(), el componente debe llamar destroyUser()
+   * para limpiar las cookies locales y redirigir a /login.
+   */
   public logout(): Observable<any> {
     const token = this.getSessionToken();
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});
     return this.http.get<any>(`${environment.url_api}/logout/`, { headers });
   }
 
-  // Funciones para utilizar las cookies en web
+  /**
+   * retrieveSignedUser
+   * Llama al endpoint GET /me/ para obtener los datos del usuario autenticado.
+   * Útil para refrescar los datos del perfil sin necesidad de reloguear.
+   * Requiere el token JWT en el header.
+   */
   retrieveSignedUser(){
     const token = this.getSessionToken();
     const headers = new HttpHeaders({'Authorization': 'Bearer '+token});
@@ -95,6 +148,13 @@ export class AuthServices {
     return this.cookieService.get(session_cookie_name);
   }
 
+  /**
+   * saveUserData
+   * Persiste el token JWT y los datos del usuario en cookies del navegador
+   * después de un login exitoso. La flag `secure` habilita la cookie como
+   * Secure+SameSite=None en HTTPS (producción) o Lax en HTTP (desarrollo).
+   * Soporta respuesta plana (campo directo) o anidada en 'user' (según el rol).
+   */
   saveUserData(user_data: any) {
     const secure = environment.url_api.indexOf("https") !== -1;
     // Soporta respuesta plana o anidada en 'user'
@@ -110,6 +170,7 @@ export class AuthServices {
     this.cookieService.set(group_name_cookie_name, user_data.rol, undefined, undefined, undefined, secure, secure ? "None" : "Lax");
   }
 
+  /** destroyUser: elimina TODAS las cookies de sesión al cerrar sesión. */
   destroyUser(){
     this.cookieService.deleteAll();
   }
@@ -131,6 +192,8 @@ export class AuthServices {
   }
 
   // ---- Role helpers (fuente única de verdad para toda la app) ----
+  // Estos métodos son consumidos por NavbarUser, Sidebar, RegistroUsuariosScreen
+  // y cualquier componente que necesite condicionar la UI según el rol del usuario.
 
   isAdmin(): boolean {
     return this.getUserGroup() === 'administrador';

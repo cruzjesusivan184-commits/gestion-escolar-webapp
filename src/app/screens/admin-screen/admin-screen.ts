@@ -11,11 +11,20 @@ import { EliminarUserModal } from '../../modals/eliminar-user-modal/eliminar-use
  * AdminScreen
  * ----------------------------------------------------------
  * Pantalla de gestión de administradores del sistema.
- * Muestra una tabla con todos los administradores registrados y
- * permite editar o desactivar (eliminar) cada uno mediante CRUD.
+ * Ruta: /administrador (protegida por AuthGuard)
+ * Endpoints consumidos: GET /lista-admins/, PATCH /admin/ (desactivar)
  *
- * Ruta: /administrador
- * Endpoint(s) consumido(s): GET /lista-admins/, PATCH /admins/ (eliminar)
+ * A diferencia de AlumnosScreen y MaestrosScreen, esta pantalla usa una
+ * tabla HTML estándar (<table class="table table-striped">) con Bootstrap,
+ * no MatTableDataSource. Esto implica que no tiene paginación ni filtrado
+ * integrado de Angular Material.
+ *
+ * La "eliminación" es lógica (soft delete): el backend pone is_active=False
+ * en el usuario, sin borrar el registro de la base de datos.
+ *
+ * Protección adicional en delete():
+ *   Un administrador no puede desactivar su propia cuenta. Se compara
+ *   el id del admin a eliminar con getUserId() para prevenir esto.
  */
 @Component({
   selector: 'app-admin-screen',
@@ -48,6 +57,7 @@ export class AdminScreen implements OnInit{
     this.administradoresService.obtenerAdmins().subscribe({
       next: (response) => {
         this.lista_admins = response;
+        console.log('JSON de la API:', response);
       },
       error: () => {
         this.notificationService.error('Error al cargar la lista de administradores. Intente de nuevo más tarde.');
@@ -62,14 +72,27 @@ export class AdminScreen implements OnInit{
 
   //Metodo para eliminar un administrador, se muestra una confirmación antes de eliminar
   public delete(id: number): void {
+    const idUserSession = Number(this.authService.getUserId());
+
+    if (idUserSession === id) {
+      this.notificationService.error('No puedes eliminar tu propia cuenta de administrador.');
+      return;
+    }
+
     const dialogRef = this.dialog.open(EliminarUserModal, {
-      data: { id: id, tipo: 'administrador' }
+      data: { id: id, rol: 'administrador' },
+      height: '288px',
+      width: '328px',
     });
-    dialogRef.afterClosed().subscribe((resultado) => {
-      if (resultado) {
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result.isDelete){
         this.obtenerAdministradores();
+      }else{
+        this.notificationService.error("Administrador no se ha podido eliminar.");
       }
     });
+
   }
 
 }

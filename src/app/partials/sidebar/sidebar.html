@@ -1,3 +1,17 @@
+<!-- sidebar.html
+     Barra lateral de navegación usando mat-sidenav de Angular Material.
+
+     mat-sidenav-container: contenedor que gestiona el sidenav y su contenido.
+     mat-sidenav [opened]: controla si está abierto (desktop siempre, móvil según mobileOpen).
+     [mode]: 'over' en móvil (se superpone) o 'side' en desktop (empuja el contenido).
+     [disableClose]: en desktop no se puede cerrar haciendo clic fuera.
+
+     @if (sintaxis Angular 17+): equivalente moderno de *ngIf. Muestra el ítem
+     de menú solo si el usuario tiene el rol requerido según los métodos
+     canSeeAdminItems(), canSeeTeacherItems(), canSeeStudentItems() del componente.
+
+     routerLink / routerLinkActive="active": routerLink navega a la ruta indicada;
+     routerLinkActive añade la clase "active" cuando esa ruta está activa. -->
 <mat-sidenav-container class="sidebar-container">
   <mat-sidenav [opened]="!isMobileView || mobileOpen" [mode]="isMobileView ? 'over' : 'side'" class="sidebar"
     (closedStart)="closeSidebar()" [disableClose]="!isMobileView">

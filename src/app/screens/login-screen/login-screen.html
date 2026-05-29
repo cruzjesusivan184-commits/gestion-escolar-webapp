@@ -1,3 +1,22 @@
+<!-- login-screen.html
+     Pantalla de inicio de sesión del Sistema Escolar BUAP.
+     Layout de dos columnas: formulario a la izquierda, imagen de bienvenida a la derecha.
+
+     (ngSubmit)="login()": enlaza el evento submit del <form> al método login() del componente.
+     #form="ngForm": referencia de template para el formulario (disponible para validaciones).
+
+     [(ngModel)]: two-way data binding — sincroniza el input con la variable del componente.
+     El prefijo "[(" denota que es bidireccional: Angular escucha cambios del input Y puede
+     actualizar el input desde el componente.
+
+     (keyup.enter)="login()": escucha la tecla Enter en el campo de contraseña para enviar
+     el formulario sin necesidad de hacer clic en el botón, mejorando la usabilidad.
+
+     @if (errors.username) / @if (errors.password): muestra mensajes de error de validación
+     solo cuando existen en el objeto `errors` del componente.
+
+     [disabled]="load": deshabilita el botón mientras la petición HTTP está en curso,
+     evitando múltiples envíos simultáneos. -->
 <section class="login-new">
   <div class="login-container">
     <!-- Section Left: Form -->

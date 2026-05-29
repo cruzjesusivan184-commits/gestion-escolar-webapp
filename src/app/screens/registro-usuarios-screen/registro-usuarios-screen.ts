@@ -16,12 +16,24 @@ import { AlumnosService } from '../../services/alumnos-service';
  * RegistroUsuariosScreen
  * ----------------------------------------------------------
  * Pantalla de registro y edición de usuarios del sistema.
- * Detecta desde la URL si es modo registro (sin params) o edición (con :rol/:id).
- * Muestra el formulario correspondiente según el tipo de usuario seleccionado:
- * administrador → RegistroAdmin, maestro → RegistroMaestros, alumno → RegistroAlumnos.
+ * Ruta pública: /registro-usuarios (registro nuevo sin sesión)
+ * Ruta protegida: /registro-usuarios/:rol/:id (edición con sesión activa)
  *
- * Ruta: /registro-usuarios  |  /registro-usuarios/:rol/:id
- * Endpoint(s) consumido(s): GET /admins/, GET /alumnos/, GET /maestros/ (por id)
+ * Funciona en dos modos:
+ *   MODO REGISTRO: sin parámetros en la URL → el usuario elige el tipo
+ *     mediante radio buttons y se muestra el formulario vacío correspondiente.
+ *   MODO EDICIÓN: con :rol e :id en la URL → carga los datos del usuario
+ *     del backend y deshabilita los radio buttons (no se puede cambiar el rol).
+ *
+ * Componentes hijo que renderiza según el tipo seleccionado:
+ *   - RegistroAdmin (@if isAdmin)
+ *   - RegistroMaestros (@if isMaestro)
+ *   - RegistroAlumnos (@if isAlumno)
+ *
+ * Los datos cargados se pasan a los hijos via @Input [datos_user]="user".
+ *
+ * Endpoints consumidos para cargar datos en edición:
+ *   GET /admin/?id=X     GET /maestros/?id=X     GET /alumnos/?id=X
  */
 @Component({
   selector: 'app-registro-usuarios-screen',

@@ -1,3 +1,28 @@
+/* ============================================================
+   sidebar.scss
+   Estilos de la barra lateral (mat-sidenav) del dashboard.
+
+   Variables SCSS ($sidebar-bg, etc.):
+     A diferencia de las variables CSS (:root {}), las variables SCSS se
+     procesan en tiempo de compilación y no se pueden cambiar en runtime.
+     Son útiles para definir una paleta de colores consistente sin repetir
+     el mismo valor hexadecimal varias veces.
+
+   Anidación en SCSS:
+     SCSS permite anidar selectores dentro de otros. Por ejemplo:
+       .sidebar-list li { ... mat-icon { ... } }
+     Angular procesa esta sintaxis y genera CSS plano al compilar.
+     Esto mejora la legibilidad al mantener la jerarquía visual del HTML.
+
+   flex-direction: column vs row:
+     column → los hijos se apilan verticalmente (ítems del menú, uno debajo del otro).
+     row → los hijos se alinean horizontalmente (icono + texto dentro de un ítem).
+
+   justify-content vs align-items en Flexbox:
+     justify-content controla la distribución en el EJE PRINCIPAL (vertical en column).
+     align-items controla la alineación en el EJE TRANSVERSAL (horizontal en column).
+   ============================================================ */
+
 // Paleta azul suave y profesional
 $sidebar-bg: #23395d;      // Azul oscuro, menos saturado
 $sidebar-accent: #1a2c48;  // Azul aún más oscuro

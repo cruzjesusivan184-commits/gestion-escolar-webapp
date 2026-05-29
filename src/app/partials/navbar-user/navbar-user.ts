@@ -8,10 +8,24 @@ import { SHARED_IMPORTS } from '../../shared/shared.imports';
 /**
  * NavbarUser
  * ----------------------------------------------------------
- * Barra de navegación superior del dashboard.
- * Muestra el inicial del nombre del usuario autenticado y un menú de usuario.
- * Incluye soporte para modo claro/oscuro (tema con variables CSS) y control
- * de visibilidad de elementos según el rol del usuario.
+ * Barra de navegación principal del dashboard: integra SIDEBAR + TOPBAR.
+ * Es el componente más complejo de navegación del sistema.
+ *
+ * Responsabilidades:
+ *   - Sidebar lateral fijo en desktop (>992px): lista de rutas con visibilidad
+ *     por rol (canSeeAdminItems, canSeeTeacherItems, canSeeStudentItems).
+ *   - Topbar superior fija con logo BUAP, icono de paleta y avatar del usuario.
+ *   - Sidebar deslizable con overlay en móvil (<992px).
+ *   - Toggle de tema claro/oscuro mediante variables CSS en :root.
+ *   - Cierre de sesión via AuthServices.logout().
+ *
+ * ¿Qué es @HostListener?
+ *   Decorador que escucha eventos del DOM global (en este caso 'window:resize').
+ *   Cuando el usuario redimensiona la ventana, onResize() actualiza isMobileView
+ *   para mostrar/ocultar el sidebar correcto sin refrescar la página.
+ *
+ * Los helpers de rol (isAdmin, canSeeAdminItems, etc.) delegan la lógica
+ * a AuthServices para mantener una única fuente de verdad.
  */
 @Component({
   selector: 'app-navbar-user',

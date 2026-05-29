@@ -1,80 +1,104 @@
-import { Component, Inject } from '@angular/core';
-import { SHARED_IMPORTS } from '../../shared/shared.imports';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
 import { AdministradoresService } from '../../services/administradores-service';
-import { MaestrosService } from '../../services/maestros-service';
 import { AlumnosService } from '../../services/alumnos-service';
+import { MaestrosService } from '../../services/maestros-service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NotificationService } from '../../services/tools/notification-service';
 
 /**
  * EliminarUserModal
  * ----------------------------------------------------------
- * Modal de confirmación para eliminar o desactivar un usuario del sistema.
- * Recibe el id y el tipo de usuario (administrador, maestro o alumno) por MAT_DIALOG_DATA.
- * Llama al endpoint de eliminación correspondiente según el tipo antes de cerrar el modal.
+ * Modal de confirmación para eliminar un usuario del sistema.
+ * Recibe por inyección el id y el rol del usuario a eliminar,
+ * y delega la llamada al servicio correspondiente según el rol.
  *
- * Endpoint(s) consumido(s): PATCH /admins/ (admin), DELETE /maestros/, DELETE /alumnos/
+ * ¿Cómo funciona MatDialog?
+ *   El componente padre (AdminScreen, MaestrosScreen, AlumnosScreen) abre
+ *   este modal con this.dialog.open(EliminarUserModal, { data: { id, rol } }).
+ *   MAT_DIALOG_DATA inyecta esos datos en el modal.
+ *   dialogRef.close({ isDelete: true/false }) cierra el modal y devuelve
+ *   un resultado al componente padre via dialogRef.afterClosed().subscribe().
+ *
+ * El modal sirve como confirmación para evitar eliminaciones accidentales.
+ * Si el profesor pregunta "¿cómo comunican datos entre componentes padre e hijo
+ * con un modal?" → "Usamos MatDialog con MAT_DIALOG_DATA para pasar datos al
+ * modal y MatDialogRef para recibir el resultado al cerrarlo."
  */
 @Component({
   selector: 'app-eliminar-user-modal',
-  imports: [
-    ...SHARED_IMPORTS
-  ],
+  imports: [],
   templateUrl: './eliminar-user-modal.html',
   styleUrl: './eliminar-user-modal.scss',
 })
-export class EliminarUserModal {
+export class EliminarUserModal implements OnInit {
+  public rol: string = "";
 
   constructor(
-    public dialogRef: MatDialogRef<EliminarUserModal>,
-    @Inject(MAT_DIALOG_DATA) public data: { id: number, tipo: string },
+    // Servicios de cada tipo de usuario para llamar al endpoint de eliminación correcto
     private administradoresService: AdministradoresService,
     private maestrosService: MaestrosService,
     private alumnosService: AlumnosService,
-    private notificationService: NotificationService
+    // NotificationService para mostrar feedback de éxito o error al usuario
+    private notificationService: NotificationService,
+    // MatDialogRef permite cerrar el modal y pasar un resultado al padre
+    private dialogRef: MatDialogRef<EliminarUserModal>,
+    // @Inject(MAT_DIALOG_DATA) inyecta los datos que el padre pasó al abrir el modal
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
-  // Cancelar el modal
-  public cancelar(): void {
-    this.dialogRef.close(false);
+  /** ngOnInit: extrae el rol del usuario desde los datos inyectados por el padre. */
+  ngOnInit(): void {
+    this.rol = this.data.rol;
   }
 
-  // Confirmar la eliminación del usuario según su tipo
-  public confirmar(): void {
-    if (this.data.tipo === 'administrador') {
-      // Administrador: se desactiva con PATCH
-      this.administradoresService.eliminarAdmin(this.data.id).subscribe({
-        next: () => {
-          this.notificationService.success('Administrador desactivado correctamente');
-          this.dialogRef.close(true);
+  /** cerrar_modal: cierra el modal devolviendo isDelete: false (el usuario canceló). */
+  public cerrar_modal() {
+    this.dialogRef.close({ isDelete: false });
+  }
+
+  /**
+   * eliminarUser
+   * Determina el servicio a usar según el rol y ejecuta la eliminación.
+   * Si tiene éxito, cierra el modal con isDelete: true para que el padre
+   * recargue la lista; si falla, muestra un toast de error.
+   */
+  public eliminarUser() {
+    if (this.rol === 'administrador') {
+      this.administradoresService.desactivarAdmin(this.data.id).subscribe({
+        next: (_response: any) => {
+          console.log('Administrador eliminado');
+          this.notificationService.success('Administrador eliminado exitosamente');
+          this.dialogRef.close({ isDelete: true });
         },
-        error: () => {
-          this.notificationService.error('Error al desactivar el administrador');
-          this.dialogRef.close(false);
+        error: (_error: any) => {
+          console.error('Error al eliminar administrador');
+          this.notificationService.error('Error al eliminar administrador');
         }
       });
-    } else if (this.data.tipo === 'maestro') {
-      // Maestro: se elimina con DELETE
+
+    } else if (this.rol === 'maestro') {
       this.maestrosService.eliminarMaestro(this.data.id).subscribe({
-        next: () => {
-          this.notificationService.success('Maestro eliminado correctamente');
-          this.dialogRef.close(true);
+        next: (_response: any) => {
+          console.log('Maestro eliminado');
+          this.notificationService.success('Maestro eliminado exitosamente');
+          this.dialogRef.close({ isDelete: true });
         },
-        error: () => {
-          this.notificationService.error('Error al eliminar el maestro');
-          this.dialogRef.close(false);
+        error: (_error: any) => {
+          console.error('Error al eliminar maestro');
+          this.notificationService.error('Error al eliminar maestro');
         }
       });
-    } else if (this.data.tipo === 'alumno') {
-      // Alumno: se elimina con DELETE
+
+    } else if (this.rol === 'alumno') {
       this.alumnosService.eliminarAlumno(this.data.id).subscribe({
-        next: () => {
-          this.notificationService.success('Alumno eliminado correctamente');
-          this.dialogRef.close(true);
+        next: (_response: any) => {
+          console.log('Alumno eliminado');
+          this.notificationService.success('Alumno eliminado exitosamente');
+          this.dialogRef.close({ isDelete: true });
         },
-        error: () => {
-          this.notificationService.error('Error al eliminar el alumno');
-          this.dialogRef.close(false);
+        error: (_error: any) => {
+          console.error('Error al eliminar alumno');
+          this.notificationService.error('Error al eliminar alumno');
         }
       });
     }

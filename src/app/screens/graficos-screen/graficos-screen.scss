@@ -1,4 +1,25 @@
 /* ============================================================
+   graficos-screen.scss
+   Estilos de la pantalla de gráficas del sistema.
+
+   .main-content-graficas { margin-left: $sidebar-width }:
+     Compensa el sidebar fijo de 220px en desktop.
+
+   CSS Grid para las gráficas (.graph-section, .user-section):
+     Usa grid-template-columns: repeat(auto-fit, minmax(340px, 1fr))
+     para colocar las gráficas en una cuadrícula responsiva:
+       - Desktop (≥1025px): 2 gráficas por fila.
+       - Tablet (577-1024px): 1 gráfica por fila (más grande).
+       - Móvil (≤576px): 1 gráfica por fila (ancho completo).
+     auto-fit con minmax ajusta automáticamente las columnas
+     sin necesidad de media queries por cada breakpoint.
+
+   canvas { width: 100% !important }:
+     Sobreescribe el ancho inline que Chart.js asigna al canvas,
+     permitiendo que se adapte al ancho de su contenedor padre.
+   ============================================================ */
+
+/* ============================================================
    AJUSTES GENERALES DEL SIDEBAR Y LAYOUT
    ============================================================ */
 

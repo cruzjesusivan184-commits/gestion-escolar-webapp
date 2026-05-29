@@ -1,5 +1,22 @@
 import { Injectable } from '@angular/core';
 
+/**
+ * ErrorsService
+ * ----------------------------------------------------------
+ * Servicio centralizado de mensajes de validación para los formularios.
+ * Todos los servicios (AlumnosService, MaestrosService, AdministradoresService)
+ * inyectan este servicio para obtener mensajes de error consistentes
+ * en toda la aplicación, sin repetir strings en cada servicio.
+ *
+ * Uso típico en un servicio de validación:
+ *   if (!this.validatorService.required(data["email"])) {
+ *     error["email"] = this.errorService.required; // → "Campo requerido."
+ *   }
+ *
+ * El método msg() con sobrecarga de tipos permite construir mensajes dinámicos
+ * con parámetros (mínimo, máximo, ejemplo de formato), manteniendo type safety.
+ */
+
 export type ErrorKey =
   | 'generic'
   | 'required'

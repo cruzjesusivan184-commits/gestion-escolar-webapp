@@ -1,3 +1,29 @@
+<!-- alumnos-screen.html
+     Pantalla de gestión de alumnos del sistema.
+     Ruta: /alumnos
+
+     Estructura:
+       - Saludo con nombre y rol del usuario autenticado.
+       - Alert decorativo con el título de la tabla.
+       - *ngIf / ng-template #noData: muestra la tabla si hay alumnos registrados,
+         o un mensaje de advertencia si la lista está vacía.
+       - Campo de filtrado: (keyup)="applyFilter($event)" ejecuta el filtro en cada
+         pulsación de tecla, actualizando dataSource.filter en tiempo real.
+
+     mat-table [dataSource]="dataSource" matSort:
+       - [dataSource] enlaza la tabla con el MatTableDataSource del componente.
+       - matSort activa el ordenamiento por columna; cada columna con mat-sort-header
+         muestra flechas de ordenamiento al hacer clic.
+
+     ng-container matColumnDef="campo":
+       Define las columnas de la tabla. Cada columna tiene:
+         - <th mat-header-cell *matHeaderCellDef>: celda de encabezado.
+         - <td mat-cell *matCellDef="let element">: celda de datos por fila.
+       *matHeaderRowDef y *matRowDef le dicen a Angular qué columnas renderizar.
+
+     mat-paginator: genera los controles de paginación automáticamente.
+     Debe estar DENTRO del .table-scroll-wrapper para que haga scroll horizontal
+     junto con la tabla en pantallas pequeñas. -->
 <!-- Pantalla de gestión de alumnos.
      Muestra una tabla Material con paginación, sorting y filtrado por nombre.
      La tabla solo se muestra si lista_alumnos.length > 0; de lo contrario muestra #noData. -->

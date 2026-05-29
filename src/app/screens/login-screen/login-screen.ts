@@ -8,11 +8,22 @@ import { NotificationService } from '../../services/tools/notification-service';
  * LoginScreen
  * ----------------------------------------------------------
  * Pantalla de autenticación del sistema.
- * Valida las credenciales del usuario y redirige al dashboard según su rol
- * (administrador, maestro o alumno) una vez que el login es exitoso.
+ * Ruta: /login (pública, sin AuthGuard)
+ * Endpoint consumido: POST /login/ (vía AuthServices.login)
  *
- * Ruta: /login
- * Endpoint(s) consumido(s): POST /api/token/ (vía AuthServices.login)
+ * Flujo del login:
+ *   1. El usuario escribe email y contraseña.
+ *   2. login() llama a AuthServices.validarLogin() para validar en frontend.
+ *   3. Si hay errores, se muestran debajo de los campos (no se llama al backend).
+ *   4. Si pasa validación → POST /login/ → respuesta con token + rol.
+ *   5. AuthServices.saveUserData() guarda el token en cookies.
+ *   6. Se redirige a /home sin importar el rol (todos van al mismo dashboard).
+ *
+ * Variable `load`: se activa mientras el backend procesa el login para
+ * deshabilitar el botón y evitar múltiples peticiones simultáneas.
+ *
+ * Variable `type`: alterna entre 'password' y 'text' para mostrar/ocultar
+ * la contraseña con el ícono del ojo en el formulario.
  */
 @Component({
   selector: 'app-login-screen',

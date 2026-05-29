@@ -6,10 +6,21 @@ import { SHARED_IMPORTS } from '../../shared/shared.imports';
 /**
  * Sidebar
  * ----------------------------------------------------------
- * Barra lateral de navegación del dashboard.
- * Controla la visibilidad de los elementos de menú según el rol del usuario
- * y gestiona el estado open/close en vista móvil (ancho < 900px).
- * Incluye la función de cierre de sesión con limpieza del sessionStorage.
+ * Barra lateral de navegación del dashboard (versión con MatSidenav).
+ * Este componente es una alternativa al NavbarUser; usa mat-sidenav de
+ * Angular Material en lugar de CSS puro para el comportamiento deslizable.
+ *
+ * mat-sidenav modes:
+ *   - 'side': el sidebar empuja el contenido (desktop)
+ *   - 'over': el sidebar se superpone al contenido (móvil)
+ * En móvil (<900px) cambia a mode='over' y [opened]=mobileOpen para
+ * controlar cuándo está visible.
+ *
+ * El guard @HostListener('window:resize') actualiza isMobileView en tiempo
+ * real cuando el usuario redimensiona la ventana.
+ *
+ * Los métodos de rol (isAdmin, canSeeAdminItems...) delegan en AuthServices
+ * para mantener una única fuente de verdad del control de acceso.
  */
 @Component({
   selector: 'app-sidebar',

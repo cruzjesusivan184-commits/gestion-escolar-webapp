@@ -1,3 +1,26 @@
+<!-- registro-usuarios-screen.html
+     Pantalla de registro y edición de usuarios del sistema.
+     Rutas: /registro-usuarios | /registro-usuarios/:rol/:id
+
+     Sección de selección de rol (mat-card + mat-radio-group):
+       mat-radio-group [(ngModel)]="user.tipo_usuario" vincula la selección al objeto.
+       (change)="radioChange($event)" actualiza las banderas isAdmin/isAlumno/isMaestro
+       para mostrar el formulario correspondiente debajo.
+       [disabled]="editar" deshabilita los radio buttons en modo edición (no se puede
+       cambiar el rol de un usuario existente).
+
+     Visibilidad condicional de radio buttons según rol del usuario autenticado:
+       Un maestro no puede registrar administradores, por eso solo se muestra
+       el radio de "Administrador" si el usuario autenticado es administrador o
+       no tiene sesión (registro público).
+
+     Sección de formularios (.forms-area):
+       Renderiza el componente hijo correspondiente:
+         @if (isAdmin) → app-registro-admin
+         @if (isAlumno) → app-registro-alumnos
+         @if (isMaestro) → app-registro-maestros
+       [rol] y [datos_user] son @Input del hijo: pasan el tipo de usuario
+       y los datos precargados (en modo edición). -->
 <div class="wrapper">
   <div class="reg-shell">
     <!-- Selección de tipo de usuario -->

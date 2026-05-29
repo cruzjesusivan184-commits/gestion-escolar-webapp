@@ -1,3 +1,20 @@
+/* ============================================================
+   admin-screen.scss
+   Estilos de la pantalla de gestión de administradores.
+
+   .main-content-admin { margin-left: 220px }:
+     Mismo patrón que alumnos-screen.scss: compensa el sidebar fijo en desktop.
+
+   ::ng-deep .mat-mdc-table:
+     Aunque admin-screen usa tabla Bootstrap (no mat-table), se incluyen
+     estilos de mat-table por posible uso futuro de Material. ::ng-deep perfora
+     la encapsulación de Angular para alcanzar los elementos internos de Material.
+
+   Tipografía fluida (clamp):
+     Los títulos de bienvenida y de la tabla usan clamp(min, preferido, max)
+     para escalar suavemente entre el tamaño mínimo en móvil y el máximo en desktop.
+   ============================================================ */
+
 /* =========================
    admin-screen.scss (completo)
    ========================= */

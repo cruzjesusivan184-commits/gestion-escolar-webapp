@@ -1,3 +1,27 @@
+/* ============================================================
+   registro-usuarios-screen.scss
+   Estilos de la pantalla de registro y edición de usuarios.
+
+   .wrapper: pantalla completa con imagen de fondo (fondo-azul.jpg).
+   .reg-shell: grid de una columna con gap entre la card de roles y el formulario.
+
+   Anidación SCSS en .role-card:
+     Los estilos de .role-card-header, .role-row, .role-pill, .title-card etc.
+     están anidados dentro de .role-card {}. Esto no afecta la especificidad CSS
+     final (se compilan a selectores .role-card .role-card-header, etc.) pero
+     mejora la legibilidad al mantener la jerarquía visual del HTML.
+
+   ::ng-deep para mat-radio-button (MDC):
+     Angular Material genera internamente .mdc-radio, .mdc-label, etc.
+     que no son accesibles con estilos encapsulados. ::ng-deep perfora la
+     encapsulación para personalizar el color (#0092B8) y tamaño del radio.
+
+   min(100%, 980px) en .role-card y .forms-area:
+     Limita el ancho máximo a 980px en desktop pero permite que ocupe
+     el 100% del contenedor en pantallas más pequeñas. Equivale a
+     max-width: 980px con un ancho base del 100%.
+   ============================================================ */
+
 .wrapper {
   margin: 0;
   min-height: 100vh;

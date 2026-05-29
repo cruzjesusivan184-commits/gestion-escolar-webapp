@@ -15,11 +15,23 @@ import { EliminarUserModal } from '../../modals/eliminar-user-modal/eliminar-use
  * AlumnosScreen
  * ----------------------------------------------------------
  * Pantalla de gestión de alumnos del sistema.
- * Muestra una tabla Material con paginación, ordenamiento y filtrado por nombre.
- * Permite editar o eliminar cada alumno registrado.
+ * Ruta: /alumnos (protegida por AuthGuard)
+ * Endpoints consumidos: GET /lista-alumnos/, DELETE /alumnos/?id=X
  *
- * Ruta: /alumnos
- * Endpoint(s) consumido(s): GET /lista-alumnos/, DELETE /alumnos/
+ * Usa MatTableDataSource<DatosAlumno> en lugar de un array simple porque:
+ *   - Integra automáticamente MatPaginator (paginación) y MatSort (ordenamiento).
+ *   - Permite setear dataSource.filter para búsqueda en tiempo real.
+ *   - filterPredicate personalizado filtra por nombre completo (first_name + last_name).
+ *   - sortingDataAccessor personalizado permite ordenar por la columna 'nombre'
+ *     que concatena first_name y last_name.
+ *
+ * @ViewChild(MatPaginator) y @ViewChild(MatSort):
+ *   Decoradores que obtienen una referencia a los componentes <mat-paginator> y
+ *   [matSort] del template. Se asignan al dataSource en ngAfterViewInit()
+ *   (NO en ngOnInit) porque el DOM aún no existe al inicializar el componente.
+ *
+ * La eliminación abre EliminarUserModal; si el modal devuelve isDelete=true,
+ * se recarga la lista llamando a obtenerAlumnos() de nuevo.
  */
 @Component({
   selector: 'app-alumnos-screen',
@@ -71,6 +83,14 @@ export class AlumnosScreen implements OnInit {
     this.obtenerAlumnos();
   }
 
+  /**
+   * ngAfterViewInit (hook del ciclo de vida)
+   * Se ejecuta DESPUÉS de que Angular ha inicializado la vista del componente.
+   * Solo en este momento @ViewChild(MatPaginator) y @ViewChild(MatSort) tienen valor,
+   * por eso se asignan aquí y NO en ngOnInit.
+   * Si se hiciera en ngOnInit, paginator y sort serían undefined porque el DOM
+   * aún no ha sido renderizado.
+   */
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -138,11 +158,15 @@ export class AlumnosScreen implements OnInit {
   // Abre el modal de confirmación para eliminar el alumno con el id seleccionado
   public delete(idUser: number) {
     const dialogRef = this.dialog.open(EliminarUserModal, {
-      data: { id: idUser, tipo: 'alumno' }
+      data: { id: idUser, rol: 'alumno' },
+      height: '288px',
+      width: '328px',
     });
-    dialogRef.afterClosed().subscribe((resultado) => {
-      if (resultado) {
+    dialogRef.afterClosed().subscribe(result => {
+      if(result.isDelete){
         this.obtenerAlumnos();
+      }else{
+        this.notificationService.error("Alumno no se ha podido eliminar.");
       }
     });
   }

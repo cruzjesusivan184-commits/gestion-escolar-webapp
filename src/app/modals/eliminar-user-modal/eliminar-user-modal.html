@@ -1,27 +1,25 @@
-<!-- Modal de confirmación para eliminar o desactivar un usuario.
-     Muestra un mensaje distinto según data.tipo (administrador/maestro/alumno).
-     El botón "Confirmar" llama a confirmar() que ejecuta el DELETE o PATCH correspondiente. -->
-<div class="modal-container">
-  <h2 mat-dialog-title>Confirmar eliminación</h2>
-  <mat-dialog-content>
-    <p>
-      @if (data.tipo === 'administrador') {
-        ¿Estás seguro de que deseas desactivar este administrador? El usuario no podrá iniciar sesión.
-      } @else if (data.tipo === 'maestro') {
-        ¿Estás seguro de que deseas eliminar este maestro? Esta acción no se puede deshacer.
-      } @else if (data.tipo === 'alumno') {
-        ¿Estás seguro de que deseas eliminar este alumno? Esta acción no se puede deshacer.
-      }
-    </p>
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button mat-button (click)="cancelar()">Cancelar</button>
-    <button mat-flat-button color="warn" (click)="confirmar()">
-      @if (data.tipo === 'administrador') {
-        Desactivar
-      } @else {
-        Eliminar
-      }
-    </button>
-  </mat-dialog-actions>
+<!-- eliminar-user-modal.html
+     Modal de confirmación de eliminación de usuario.
+     Se abre desde AdminScreen, MaestrosScreen o AlumnosScreen.
+     Muestra un título dinámico interpolando la variable `rol` (administrador/maestro/alumno).
+     Los botones invocan cerrar_modal() (cancelar) y eliminarUser() (confirmar).
+     El evento (click) en Angular enlaza un evento del DOM (clic) con un método del componente. -->
+<div class="wrapper">
+  <div class="icon-close">
+      <button class="btn" (click)="cerrar_modal()">
+          <i class="bi bi-x-lg"></i>
+      </button>
+  </div>
+  <div class="body-modal">
+      <h1 class="title-modal">Eliminar {{rol}}</h1>
+      <span class="descripcion">Estás a punto de eliminar este {{rol}}. Una vez que lo elimines no podrás deshacer esta acción.</span>
+      <div class="buttons-modal">
+          <button mat-button class="btn-regresar" (click)="cerrar_modal()">
+              Cancelar
+          </button>
+          <button mat-button class="btn-eliminar" (click)="eliminarUser()">
+              Eliminar
+          </button>
+      </div>
+  </div>
 </div>

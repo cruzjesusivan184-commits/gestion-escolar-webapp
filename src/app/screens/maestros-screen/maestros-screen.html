@@ -1,3 +1,22 @@
+<!-- maestros-screen.html
+     Pantalla de gestión de maestros del sistema.
+     Ruta: /maestros
+
+     Idéntica en estructura a alumnos-screen.html.
+     *ngIf="lista_maestros.length > 0; else noData":
+       - Si hay maestros registrados, muestra la tabla Material.
+       - Si está vacía, renderiza la plantilla referenciada por #noData.
+       Esta es la sintaxis "clásica" de Angular (*ngIf) en lugar de @if,
+       ambas son válidas y producen el mismo resultado.
+
+     matSort en la tabla y mat-sort-header en columnas:
+       Permiten ordenar la tabla haciendo clic en el encabezado de la columna.
+       El sortingDataAccessor del componente define cómo ordenar la columna 'nombre'
+       (que no existe como campo en el modelo; se construye de first_name + last_name).
+
+     mat-paginator [pageSizeOptions]="[5, 10, 20]":
+       Muestra un selector para que el usuario elija cuántos registros ver por página.
+       showFirstLastButtons agrega botones para ir a la primera/última página. -->
 <!-- Pantalla de gestión de maestros.
      Muestra una tabla Material con paginación, sorting y filtrado por nombre.
      La tabla solo se muestra si lista_maestros.length > 0; de lo contrario muestra #noData. -->

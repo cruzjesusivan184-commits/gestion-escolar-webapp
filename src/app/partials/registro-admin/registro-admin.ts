@@ -48,6 +48,12 @@ export class RegistroAdmin implements OnInit {
     private activatedRoute: ActivatedRoute
   ) { }
 
+  /**
+   * ngOnInit
+   * Se ejecuta automáticamente al inicializar el componente.
+   * Detecta si estamos en modo edición leyendo el parámetro :id de la URL.
+   * Si hay id → carga los datos del admin; si no → inicializa el esquema vacío.
+   */
   ngOnInit() {
     //Primero validamos si existe un rol y un id, si es así, estamos en modo edición y cargamos los datos del usuario a editar
     if(this.activatedRoute.snapshot.params['id'] !== undefined){
@@ -92,6 +98,13 @@ export class RegistroAdmin implements OnInit {
     this.location.back();
   }
 
+  /**
+   * registrar
+   * Valida los datos del formulario y, si no hay errores, llama al servicio
+   * para registrar al nuevo administrador via POST /admin/.
+   * Si las contraseñas no coinciden, muestra un toast de error y las limpia.
+   * Usa .subscribe() porque registrarAdmin() retorna un Observable.
+   */
   public registrar(){
     // Inicializo el objeto de errores para evitar que se muestren errores anteriores o datos anteriores al momento de registrar un nuevo admin
     this.errors = {};
@@ -129,6 +142,12 @@ export class RegistroAdmin implements OnInit {
 
   }
 
+  /**
+   * actualizar
+   * Valida los datos y llama al servicio para actualizar el administrador
+   * via PUT /admin/. No requiere validación de contraseñas (editar=true).
+   * Tras actualizar correctamente, redirige a /administrador.
+   */
   public actualizar(){
     // Validación de los datos
     this.errors = {};

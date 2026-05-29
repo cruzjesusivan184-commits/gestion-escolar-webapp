@@ -1,3 +1,15 @@
+<!-- home-screen.html
+     Pantalla de inicio del dashboard.
+     Ruta: /home
+
+     Muestra la pantalla de gestión correspondiente al rol del usuario:
+       - administrador → app-admin-screen
+       - alumno → app-alumnos-screen
+       - maestro → app-maestros-screen
+
+     @if (rol === 'X'): la variable `rol` se obtiene de AuthServices en ngOnInit()
+     y determina qué componente hijo se inserta en el DOM.
+     Los componentes no mostrados NO se renderizan, ahorrando peticiones HTTP. -->
 <div class="wrapper">
   <div class="section-home">
     <div class="body-home">

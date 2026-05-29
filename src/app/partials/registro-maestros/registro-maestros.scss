@@ -1,3 +1,22 @@
+/* ============================================================
+   registro-maestros.scss
+   Estilos del formulario de registro y edición de maestros.
+   Extiende registro-admin.scss con estilos adicionales para:
+     - Sección de checkboxes de materias (.select-materias, .checkbox-item)
+     - Personalización del color del mat-checkbox con ::ng-deep
+     - Radio buttons de campus
+
+   ::ng-deep para mat-checkbox (MDC):
+     Angular Material v15+ usa el componente MDC internamente, cuyos
+     elementos (.mdc-checkbox__background, .mdc-checkbox__ripple) no son
+     accesibles desde los estilos del componente. Con ::ng-deep se puede
+     cambiar el color del checkbox al azul institucional (#0092B8).
+
+   .checkbox-group usa flex-direction: column (por herencia del padre)
+   para apilar cada mat-checkbox verticalmente, facilitando la selección
+   de múltiples materias en dispositivos táctiles.
+   ============================================================ */
+
 /* =========================
    Estilos para el maestro-screen
    ========================= */

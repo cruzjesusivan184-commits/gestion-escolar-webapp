@@ -6,15 +6,36 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthServices } from './auth-services';
 
+/**
+ * AdministradoresService
+ * ----------------------------------------------------------
+ * Servicio de datos para la gestión de administradores.
+ * También expone getTotalUsuarios() que consume el endpoint de resumen
+ * utilizado en GraficosScreen para construir las gráficas.
+ *
+ * Endpoints consumidos:
+ *   POST   /admin/           — registrarAdmin()
+ *   GET    /lista-admins/    — obtenerAdmins()
+ *   GET    /admin/?id=X      — obtenerAdminPorId()
+ *   PUT    /admin/           — actualizarAdmin()
+ *   PATCH  /admin/           — eliminarAdmin() / desactivarAdmin()
+ *   GET    /total-usuarios/  — getTotalUsuarios()
+ *
+ * Nota: la "eliminación" de admins es una eliminación lógica (PATCH que
+ * pone is_active=False), no una eliminación física de la base de datos.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class AdministradoresService {
 
   constructor(
+    // ValidatorService y ErrorsService para validar formularios antes de llamar al backend
     private validatorService: ValidatorService,
     private errorService: ErrorsService,
+    // HttpClient para las peticiones HTTP
     private http: HttpClient,
+    // AuthServices provee el token JWT para los headers de autenticación
     private authServices: AuthServices
   ) {}
 
@@ -26,6 +47,12 @@ export class AdministradoresService {
       : new HttpHeaders({ 'Content-Type': 'application/json' });
   }
 
+  /**
+   * esquemaAdmin
+   * Retorna un objeto con la estructura vacía de un administrador.
+   * Se usa en RegistroAdmin para inicializar el formulario de registro nuevo,
+   * garantizando que todos los campos existan con valor vacío desde el inicio.
+   */
   public esquemaAdmin(){
     return {
       'rol':'',
@@ -44,6 +71,13 @@ export class AdministradoresService {
     }
   }
 
+  /**
+   * validarAdmin
+   * Valida los campos del formulario de administrador antes de enviarlo al backend.
+   * Recibe el objeto de datos y una bandera que indica si es edición (true) o
+   * registro nuevo (false). En modo edición, los campos de contraseña son opcionales.
+   * Retorna un objeto con los mensajes de error por campo; si está vacío, no hay errores.
+   */
   public validarAdmin(data: any, editar: boolean){
 
     let error: any = {};
@@ -138,6 +172,10 @@ export class AdministradoresService {
   //Creamos la petición PATCH para desactivar un administrador (eliminación lógica)
   public eliminarAdmin(id: number): Observable<any> {
     return this.http.patch<any>(`${environment.url_api}/admin/`, { id }, { headers: this.getAuthHeaders() });
+  }
+  //Creamos la petición PATCH para cambiar el estatus del usuario a inactivo
+  public desactivarAdmin(id: number): Observable<any> {
+    return this.http.patch<any>(`${environment.url_api}/admin/?id=${id}`, { id }, { headers: this.getAuthHeaders() });
   }
   //Creamos la petición GET para obtener el total de usuarios registrados por cada rol, esta función se llamará en el método obtenerTotalUsers() del componente graficas-screen.ts
   public getTotalUsuarios(): Observable<any> {

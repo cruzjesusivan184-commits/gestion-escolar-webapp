@@ -6,15 +6,35 @@ import { AuthServices } from './auth-services';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+/**
+ * AlumnosService
+ * ----------------------------------------------------------
+ * Servicio de datos para la gestión de alumnos.
+ * Centraliza todas las peticiones HTTP al backend relacionadas con alumnos,
+ * además de la validación frontend del formulario.
+ *
+ * Endpoints consumidos:
+ *   POST   /alumnos/         — registrarAlumno()
+ *   GET    /lista-alumnos/   — obtenerListaAlumnos()
+ *   GET    /alumnos/?id=X    — obtenerAlumnoPorId()
+ *   PUT    /alumnos/         — actualizarAlumno()
+ *   DELETE /alumnos/?id=X    — eliminarAlumno()
+ *
+ * Todas las peticiones autenticadas envían el token JWT en el header
+ * mediante getAuthHeaders(), que construye el header Authorization.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class AlumnosService {
 
   constructor(
+    // HttpClient para las peticiones HTTP al backend Django
     private http: HttpClient,
+    // ValidatorService y ErrorsService para validar formularios en el frontend
     private validatorService: ValidatorService,
     private errorService: ErrorsService,
+    // AuthServices para obtener el token JWT de la sesión activa
     private authService: AuthServices
   ) { }
 

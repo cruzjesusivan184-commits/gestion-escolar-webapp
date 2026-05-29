@@ -1,5 +1,20 @@
 import { Injectable } from '@angular/core';
 
+/**
+ * ValidatorService
+ * ----------------------------------------------------------
+ * Servicio de validación de datos de formularios en el frontend.
+ * Provee métodos reutilizables para validar tipos, longitudes, formatos
+ * y rangos ANTES de enviar datos al backend.
+ *
+ * Se usa en AlumnosService.validarAlumno(), MaestrosService.validarMaestro()
+ * y AdministradoresService.validarAdmin() para construir el objeto de errores
+ * que se muestra debajo de cada campo del formulario.
+ *
+ * Diseño: todos los métodos retornan boolean y aceptan Nullable<T> para
+ * manejar de forma segura valores null/undefined sin lanzar excepciones.
+ */
+
 type Nullable<T> = T | null | undefined;
 
 @Injectable({

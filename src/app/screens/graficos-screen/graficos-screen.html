@@ -1,3 +1,20 @@
+<!-- graficos-screen.html
+     Pantalla de análisis visual con gráficas dinámicas.
+     Ruta: /graficas
+
+     Usa el componente <canvas baseChart> de ng2-charts (wrapper de Chart.js).
+     Atributos de cada canvas:
+       type="line"|"bar"|"pie"|"doughnut": define el tipo de gráfica.
+       [data]: objeto con labels y datasets (datos y colores).
+       [plugins]: array de plugins de Chart.js (aquí DatalabelsPlugin).
+       [options]: configuración adicional como responsive.
+
+     Los datos de usuarios (line, pie, doughnut) se cargan del backend via
+     GET /total-usuarios/. Los datos de eventos (bar) son estáticos por ahora.
+
+     Se divide en dos secciones con alertas decorativas:
+       1. "Análisis De Eventos Académicos": line chart + bar chart.
+       2. "Análisis De Usuarios": pie chart + doughnut chart. -->
 <!-- Contenedor principal que aplica el margen del sidebar -->
 <div class="wrapper main-content-graficas">
   <div class="section-home">

@@ -1,3 +1,23 @@
+<!-- navbar-user.html
+     Plantilla del componente NavbarUser: sidebar + topbar del dashboard.
+
+     Estructura:
+       1. Sidebar de escritorio (@if !isMobileView): visible solo en pantallas >992px.
+       2. Topbar fija: logo BUAP, icono de paleta, avatar.
+       3. Sidebar móvil (@if isMobileView): se desliza desde la izquierda con overlay.
+
+     @if / @else (sintaxis de control de flujo Angular 17+):
+       Es la versión moderna de *ngIf. Muestra u oculta bloques del DOM según
+       la condición, sin necesidad de importar CommonModule explícitamente.
+
+     canSeeAdminItems() / canSeeTeacherItems() / canSeeStudentItems():
+       Métodos del componente que delegan en AuthServices para decidir si el
+       usuario actual tiene permiso de ver cada elemento del menú.
+       Así se logra un menú dinámico según el rol sin hardcodear rutas.
+
+     routerLinkActive="active":
+       Angular añade la clase CSS "active" automáticamente cuando la URL
+       actual coincide con el routerLink del elemento. -->
 <div class="navbar-sidebar-wrapper">
   <!-- Desktop sidebar -->
   @if (!isMobileView) {

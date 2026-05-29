@@ -6,7 +6,16 @@
  *   - AuthLayout: rutas públicas (/login, /registro-usuarios, /registro-usuarios/:rol/:id)
  *   - DashboardLayout + AuthGuard: rutas protegidas (/home, /administrador, /alumnos, /maestros, /graficas)
  *   - Wildcard (**): redirige a /login
- * Todos los componentes se cargan de forma lazy (loadComponent) para optimizar el bundle.
+ *
+ * Lazy loading con loadComponent:
+ *   En lugar de importar cada pantalla al inicio, Angular solo descarga el
+ *   código de una pantalla cuando el usuario navega a ella. Esto reduce
+ *   el tamaño del bundle inicial y mejora el tiempo de carga.
+ *   Sintaxis: loadComponent: () => import('./ruta').then(m => m.NombreClase)
+ *
+ * canActivate: [AuthGuard] protege las rutas del dashboard. Si el guard
+ *   devuelve false (no hay token), Angular cancela la navegación y redirige
+ *   al usuario a /login antes de mostrar cualquier pantalla protegida.
  */
 import { Routes } from '@angular/router';
 import { AuthLayout } from './layouts/auth-layout/auth-layout';

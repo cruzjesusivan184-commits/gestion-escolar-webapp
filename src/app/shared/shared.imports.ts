@@ -39,11 +39,26 @@ import { BaseChartDirective } from 'ng2-charts';
 /**
  * SHARED_IMPORTS
  * ---------------------------------------------------------
- * Colección de módulos/directivas reutilizables en
- * componentes standalone.
+ * Colección centralizada de módulos y directivas que se reutilizan
+ * en todos los componentes standalone de la app.
  *
- * Se importa así:
- * imports: [...SHARED_IMPORTS, HeaderApp, FooterApp]
+ * ¿Por qué existe este archivo?
+ *   Con Angular standalone, cada componente declara sus propias importaciones.
+ *   Sin este archivo, habría que repetir la misma lista de 15+ módulos en cada
+ *   componente. SHARED_IMPORTS agrupa todo y se esparce con el spread operator:
+ *     imports: [...SHARED_IMPORTS]
+ *
+ * Módulos incluidos y su propósito:
+ *   - CommonModule / NgClass: directivas *ngIf, *ngFor, NgClass (aunque Angular 17+
+ *     puede usar @if/@for, algunos componentes aún usan la sintaxis antigua).
+ *   - FormsModule: habilita [(ngModel)] para el two-way data binding en formularios.
+ *   - ReactiveFormsModule: habilita FormGroup/FormControl para formularios reactivos.
+ *   - RouterModule: habilita routerLink, routerLinkActive, router-outlet en templates.
+ *   - MatTableModule + MatPaginatorModule + MatSortModule: tabla Material con
+ *     paginación y ordenamiento.
+ *   - MatDialogModule: modales de confirmación (EliminarUserModal).
+ *   - NgxMaskDirective / NgxMaskPipe: máscaras de entrada (teléfono, RFC, CURP).
+ *   - BaseChartDirective: directiva de ng2-charts para renderizar gráficas Chart.js.
  */
 
 export const SHARED_IMPORTS = [
