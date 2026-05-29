@@ -6,7 +6,18 @@ import { provideNgxMask } from 'ngx-mask';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getSpanishPaginatorIntl } from './shared/spanish-paginator-intl';
+/* =========================
+    Gráficas
+    ========================= */
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
+/**
+ * appConfig
+ * ----------------------------------------------------------
+ * Configuración global de la aplicación Angular.
+ * Registra los providers principales: router, HttpClient, ngx-mask,
+ * localización de fechas (es-MX), paginador en español y gráficas (ng2-charts).
+ */
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -16,5 +27,8 @@ export const appConfig: ApplicationConfig = {
     provideNgxMask(),
     { provide: MAT_DATE_LOCALE, useValue: 'es-MX' },
     { provide: MatPaginatorIntl, useFactory: getSpanishPaginatorIntl },
+    provideCharts(
+      withDefaultRegisterables()
+    ),
   ]
 };

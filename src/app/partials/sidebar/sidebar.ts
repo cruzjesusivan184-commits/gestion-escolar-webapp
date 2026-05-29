@@ -3,6 +3,14 @@ import { AuthServices } from '../../services/auth-services';
 import { Router } from '@angular/router';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
 
+/**
+ * Sidebar
+ * ----------------------------------------------------------
+ * Barra lateral de navegación del dashboard.
+ * Controla la visibilidad de los elementos de menú según el rol del usuario
+ * y gestiona el estado open/close en vista móvil (ancho < 900px).
+ * Incluye la función de cierre de sesión con limpieza del sessionStorage.
+ */
 @Component({
   selector: 'app-sidebar',
   imports: [
@@ -33,14 +41,17 @@ export class Sidebar implements OnInit{
     }
   }
 
+  // Alterna el estado abierto/cerrado del sidebar en vista móvil
   toggleSidebar() {
     this.mobileOpen = !this.mobileOpen;
   }
 
+  // Cierra el sidebar en vista móvil
   closeSidebar() {
     this.mobileOpen = false;
   }
 
+  // Llama al endpoint de logout y limpia los datos de sesión del usuario
   logout() {
     this.authService.logout().subscribe(
       (response) => {

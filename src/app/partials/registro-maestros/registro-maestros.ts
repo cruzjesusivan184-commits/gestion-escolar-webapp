@@ -1,10 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { MaestrosService } from '../../services/maestros-service';
 import { NotificationService } from '../../services/tools/notification-service';
 
+/**
+ * RegistroMaestros
+ * ----------------------------------------------------------
+ * Formulario de registro y edición de maestros.
+ * Recibe los datos del usuario por @Input cuando está en modo edición.
+ * Incluye select de área de investigación, checkboxes de materias y datepicker.
+ *
+ * Endpoint(s) consumido(s): POST /maestros/, PUT /maestros/
+ */
 @Component({
   selector: 'app-registro-maestros',
   imports: [
@@ -54,36 +63,39 @@ export class RegistroMaestros implements OnInit {
   constructor(
     private location: Location,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private maestrosService: MaestrosService,
     private notificationService: NotificationService
   ) { }
 
-  ngOnInit() {
-    this.maestro = this.maestrosService.esquemaMaestro();
-    // Rol del usuario
-    this.maestro.rol = this.rol;
+  ngOnInit(): void {
+    if(this.activatedRoute.snapshot.params['id'] !== undefined){
+      this.editar = true;
+      this.idUser = this.activatedRoute.snapshot.params['id'];
+      // Igual que admin: asignamos los datos que vienen del padre
+      this.maestro = this.datos_user;
+    }else{
+      this.maestro = this.maestrosService.esquemaMaestro();
+      this.maestro.rol = this.rol;
+    }
   }
 
   //Funciones para password
-  public showPassword()
-  {
+  public showPassword() {
     if(this.inputType_1 === 'password'){
       this.inputType_1 = 'text';
       this.hide_1 = true;
-    }
-    else{
+    } else {
       this.inputType_1 = 'password';
       this.hide_1 = false;
     }
   }
 
-  public showPwdConfirmar()
-  {
+  public showPwdConfirmar() {
     if(this.inputType_2 === 'password'){
       this.inputType_2 = 'text';
       this.hide_2 = true;
-    }
-    else{
+    } else {
       this.inputType_2 = 'password';
       this.hide_2 = false;
     }
@@ -94,21 +106,13 @@ export class RegistroMaestros implements OnInit {
   }
 
   public registrar(){
-
-    // Inicializo el objeto de errores para evitar que se muestren errores anteriores o datos anteriores al momento de registrar un nuevo admin
     this.errors = {};
     console.log("Datos del maestro: ", this.maestro);
-
-    // Validar datos y mostrar errores
     this.errors = this.maestrosService.validarMaestro(this.maestro, this.editar);
-    //Verificamos si el objeto de errores está vacío, lo que indica que no hay errores de validación
     if(Object.keys(this.errors).length > 0){
       return;
     }
-
-    // Validar si las contraseñas coinciden solo si no se está editando, ya que en la edición no es obligatorio cambiar la contraseña
     if(this.maestro.password === this.maestro.confirmar_password){
-      //Lógica para registrar el maestro, conectando con el backend y mostrando notificaciones de éxito o error según corresponda
       this.maestrosService.registrarMaestro(this.maestro).subscribe({
         next: (response) => {
           this.notificationService.success("Maestro registrado exitosamente");
@@ -119,28 +123,41 @@ export class RegistroMaestros implements OnInit {
           this.notificationService.error("Error al registrar el maestro. Por favor, inténtalo de nuevo.");
         }
       });
-    }else{
+    } else {
       this.notificationService.error("Las contraseñas no coinciden");
       this.maestro.password="";
       this.maestro.confirmar_password="";
     }
-
   }
 
-  public actualizar(){
-
+ public actualizar(){
+    this.errors = {};
+    this.errors = this.maestrosService.validarMaestro(this.maestro, this.editar);
+    if(Object.keys(this.errors).length > 0){
+      return;
+    }
+    this.maestro.id = this.idUser;
+    this.maestrosService.actualizarMaestro(this.maestro).subscribe({
+      next: (response) => {
+        this.notificationService.success("Maestro actualizado exitosamente");
+        this.router.navigate(['/maestros']);
+      },
+      error: (error) => {
+        console.error("Error al actualizar el maestro: ", error);
+        this.notificationService.error("Error al actualizar el maestro.");
+      }
+    });
   }
-
-  //Función para detectar el cambio de fecha
+  // Convierte la fecha seleccionada en el datepicker al formato YYYY-MM-DD para el backend
   public changeFecha(event :any){
     this.maestro.fecha_nacimiento = event.value.toISOString().split("T")[0];
   }
 
-  // Funciones para los checkbox
+  // Agrega o quita una materia del array según el estado del checkbox
   public checkboxChange(event:any){
     if(event.checked){
       this.maestro.materias_array.push(event.source.value)
-    }else{
+    } else {
       this.maestro.materias_array.forEach((materia: any, i: any) => {
         if(materia === event.source.value){
           this.maestro.materias_array.splice(i,1)
@@ -149,17 +166,13 @@ export class RegistroMaestros implements OnInit {
     }
   }
 
+  // Retorna true si la materia con ese nombre ya está seleccionada; se usa para marcar los checkboxes en modo edición
   public revisarSeleccion(nombre: string){
     if(this.maestro.materias_array){
       const busqueda = this.maestro.materias_array.find((element: string)=>element===nombre);
-      if(busqueda !== undefined){
-        return true;
-      }else{
-        return false;
-      }
-    }else{
-      return false;
+      return busqueda !== undefined;
     }
+    return false;
   }
 
 }

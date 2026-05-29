@@ -12,6 +12,17 @@ import { NotificationService } from '../../services/tools/notification-service';
 import { MaestrosService } from '../../services/maestros-service';
 import { AlumnosService } from '../../services/alumnos-service';
 
+/**
+ * RegistroUsuariosScreen
+ * ----------------------------------------------------------
+ * Pantalla de registro y edición de usuarios del sistema.
+ * Detecta desde la URL si es modo registro (sin params) o edición (con :rol/:id).
+ * Muestra el formulario correspondiente según el tipo de usuario seleccionado:
+ * administrador → RegistroAdmin, maestro → RegistroMaestros, alumno → RegistroAlumnos.
+ *
+ * Ruta: /registro-usuarios  |  /registro-usuarios/:rol/:id
+ * Endpoint(s) consumido(s): GET /admins/, GET /alumnos/, GET /maestros/ (por id)
+ */
 @Component({
   selector: 'app-registro-usuarios-screen',
   imports: [
@@ -93,13 +104,50 @@ export class RegistroUsuariosScreen implements OnInit {
 
     }else if(this.rol === "alumno"){
       //Lógica para obtener un alumno por su ID
-      //TODO: Implementar la lógica para obtener un alumno por su ID utilizando el servicio de alumnos
+      this.alumnosService.obtenerAlumnoPorId(this.idUser).subscribe({
+        next: (response) => {
+          this.user = response;
+          console.log("Datos del alumno encontrado: ", this.user);
+          this.user.first_name = response.user?.first_name || response.first_name;
+          this.user.last_name = response.user?.last_name || response.last_name;
+          this.user.email = response.user?.email || response.email;
+          this.user.tipo_usuario = this.rol;
+          this.isAlumno = true;
+        },
+        error: (error) => {
+          this.notificationService.error('Error al cargar los datos del alumno. Intente de nuevo más tarde.');
+          console.log(error);
+        }
+      });
     }else if(this.rol === "maestro"){
       //Lógica para obtener un maestro por su ID
-      //TODO: Implementar la lógica para obtener un maestro por su ID utilizando el servicio de maestros
+      this.maestrosService.obtenerMaestroPorId(this.idUser).subscribe({
+        next: (response) => {
+          this.user = response;
+          console.log("Datos del maestro encontrado: ", this.user);
+          this.user.first_name = response.user?.first_name || response.first_name;
+          this.user.last_name = response.user?.last_name || response.last_name;
+          this.user.email = response.user?.email || response.email;
+          this.user.tipo_usuario = this.rol;
+          // Convertir materias_array de string JSON a array si es necesario
+          if(typeof this.user.materias_array === 'string'){
+            try {
+              this.user.materias_array = JSON.parse(this.user.materias_array);
+            } catch(e) {
+              this.user.materias_array = [];
+            }
+          }
+          this.isMaestro = true;
+        },
+        error: (error) => {
+          this.notificationService.error('Error al cargar los datos del maestro. Intente de nuevo más tarde.');
+          console.log(error);
+        }
+      });
     }
   }
 
+  // Maneja el cambio de tipo de usuario en los radio buttons y activa el formulario correspondiente
   public radioChange(event: MatRadioChange) {
     if(event.value === "administrador"){
       this.isAdmin = true;

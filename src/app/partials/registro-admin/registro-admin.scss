@@ -1,3 +1,11 @@
+/* ============================================================
+   registro-admin.scss
+   Estilos del formulario de registro y edición de administradores.
+   Incluye layout de columna centrada, campos Material, botones
+   de acción y ajustes responsivos para móvil (≤700px).
+   ============================================================ */
+
+/* Contenedor raíz del formulario */
 .wrapper {
   width: 100%;
   min-height: 100vh;
@@ -8,6 +16,7 @@
   background-color: #fff;
 }
 
+/* Sección centrada que envuelve el formulario */
 .section-registro{
   width: 90%;
   height: 100%;
@@ -17,6 +26,7 @@
   align-items: center;
 }
 
+/* Cuerpo del formulario con gap vertical entre campos */
 .body-registro {
   width: 100%;
   display: flex;
@@ -28,6 +38,7 @@
   background: #fff;
 }
 
+/* Título del formulario (encabezado de sección) */
 .title-user{
   font-size: 28px;
   text-align: left;
@@ -38,6 +49,7 @@
   opacity: 1;
 }
 
+/* Campos de texto Material: ancho 90%, centrados con margen lateral */
 mat-form-field{
   width: 90%!important;
   margin-left: 5%;

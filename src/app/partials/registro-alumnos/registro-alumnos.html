@@ -1,5 +1,8 @@
+<!-- Formulario de registro y edición de alumnos.
+     En modo registro muestra campos de contraseña; en modo edición los oculta (@if !editar).
+     Los campos de solo letras usan el evento (keydown)="soloLetras($event)". -->
 <div class="wrapper">
-  <!-- Va a englobar todo el formulario con la cabecera -->
+  <!-- Sección principal que engloba el formulario -->
   <div class="section-registro">
     <div class="body-registro">
       <div class="row mt-3 mb-3">
@@ -112,6 +115,26 @@
       </mat-form-field>
       @if (errors.ocupacion) {
         <div class="invalid-feedback">{{ errors.ocupacion }}</div>
+      }
+
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Dirección</mat-label>
+        <input matInput [(ngModel)]="alumno.direccion" name="direccion" placeholder="Escribe dirección del alumno">
+      </mat-form-field>
+      @if (errors.direccion) {
+        <div class="invalid-feedback">{{ errors.direccion }}</div>
+      }
+
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Sexo</mat-label>
+        <mat-select [(ngModel)]="alumno.sexo" name="sexo">
+          <mat-option value="Masculino">Masculino</mat-option>
+          <mat-option value="Femenino">Femenino</mat-option>
+          <mat-option value="Prefiero no decirlo">Prefiero no decirlo</mat-option>
+        </mat-select>
+      </mat-form-field>
+      @if (errors.sexo) {
+        <div class="invalid-feedback">{{ errors.sexo }}</div>
       }
 
       <div class="section-buttons">

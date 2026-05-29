@@ -1,6 +1,11 @@
-// Cree estas interfaces para mantener más limpio el codigo
-// Tambien para dividirlo por tipo de usuario
-// La ventaja es que se pueden importar y ya no se ve feo afuera de la clase
+/**
+ * usuarios-interfaces.ts
+ * ----------------------------------------------------------
+ * Define las interfaces TypeScript para los modelos de datos de usuarios.
+ * Se utilizan principalmente como tipo genérico del MatTableDataSource
+ * en las pantallas de gestión (MaestrosScreen, AlumnosScreen).
+ * Separar las interfaces aquí evita repetir definiciones en cada componente.
+ */
 
 /// Interfaz datos de usuario de maestro
 export interface DatosMaestro {
@@ -17,3 +22,18 @@ export interface DatosMaestro {
 }
 
 //TODO: Crear interfaces para alumno y administrador
+
+// Interfaz datos de alumno
+export interface DatosAlumno {
+  id: number;
+  matricula: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  fecha_nacimiento: string;
+  curp: string;
+  rfc: string;
+  edad: number;
+  telefono: string;
+  ocupacion: string;
+}

@@ -1,0 +1,27 @@
+<!-- Modal de confirmación para eliminar o desactivar un usuario.
+     Muestra un mensaje distinto según data.tipo (administrador/maestro/alumno).
+     El botón "Confirmar" llama a confirmar() que ejecuta el DELETE o PATCH correspondiente. -->
+<div class="modal-container">
+  <h2 mat-dialog-title>Confirmar eliminación</h2>
+  <mat-dialog-content>
+    <p>
+      @if (data.tipo === 'administrador') {
+        ¿Estás seguro de que deseas desactivar este administrador? El usuario no podrá iniciar sesión.
+      } @else if (data.tipo === 'maestro') {
+        ¿Estás seguro de que deseas eliminar este maestro? Esta acción no se puede deshacer.
+      } @else if (data.tipo === 'alumno') {
+        ¿Estás seguro de que deseas eliminar este alumno? Esta acción no se puede deshacer.
+      }
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="warn" (click)="confirmar()">
+      @if (data.tipo === 'administrador') {
+        Desactivar
+      } @else {
+        Eliminar
+      }
+    </button>
+  </mat-dialog-actions>
+</div>

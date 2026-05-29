@@ -4,6 +4,16 @@ import { Router } from '@angular/router';
 import { AuthServices } from '../../services/auth-services';
 import { NotificationService } from '../../services/tools/notification-service';
 
+/**
+ * LoginScreen
+ * ----------------------------------------------------------
+ * Pantalla de autenticación del sistema.
+ * Valida las credenciales del usuario y redirige al dashboard según su rol
+ * (administrador, maestro o alumno) una vez que el login es exitoso.
+ *
+ * Ruta: /login
+ * Endpoint(s) consumido(s): POST /api/token/ (vía AuthServices.login)
+ */
 @Component({
   selector: 'app-login-screen',
   imports: [
@@ -78,10 +88,12 @@ export class LoginScreen implements OnInit {
 
   }
 
+  // Redirige a la pantalla de registro de usuarios
   public registrar() {
     this.router.navigate(['registro-usuarios']);
   }
 
+  // Alterna la visibilidad del campo de contraseña (pendiente de implementar)
   public showPassword() {
 
   }

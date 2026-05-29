@@ -6,6 +6,15 @@ import { Location } from '@angular/common';
 import { AdministradoresService } from '../../services/administradores-service';
 import { NotificationService } from '../../services/tools/notification-service';
 
+/**
+ * RegistroAdmin
+ * ----------------------------------------------------------
+ * Formulario de registro y edición de administradores.
+ * Recibe los datos del usuario por @Input cuando está en modo edición.
+ * En modo registro inicializa el esquema vacío desde AdministradoresService.
+ *
+ * Endpoint(s) consumido(s): POST /admins/, PUT /admins/
+ */
 @Component({
   selector: 'app-registro-admin',
   imports: [

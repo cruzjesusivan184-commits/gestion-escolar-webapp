@@ -1,0 +1,25 @@
+/* ============================================================
+   eliminar-user-modal.scss
+   Estilos del modal de confirmación de eliminación/desactivación.
+   Aplica padding interno, tamaño mínimo y espaciado entre botones.
+   ============================================================ */
+
+.modal-container {
+  padding: 16px;
+  min-width: 320px;
+
+  h2 {
+    margin-bottom: 8px;
+  }
+
+  mat-dialog-content {
+    p {
+      font-size: 16px;
+      color: #333;
+    }
+  }
+
+  mat-dialog-actions {
+    gap: 8px;
+  }
+}

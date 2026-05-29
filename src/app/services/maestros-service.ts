@@ -26,6 +26,11 @@ export class MaestrosService {
       : new HttpHeaders({ 'Content-Type': 'application/json' });
   }
 
+  /**
+   * esquemaMaestro
+   * Retorna un objeto con la estructura vacía de un maestro.
+   * Se usa en RegistroMaestros para inicializar el formulario de registro nuevo.
+   */
   public esquemaMaestro(){
     return {
       'rol':'',
@@ -40,12 +45,21 @@ export class MaestrosService {
       'rfc': '',
       'cubiculo': '',
       'area_investigacion': '',
-      'materias_array': []
+      'materias_array': [],
+      'campus': '',
+      'sueldo_estimado': ''
     }
 
   }
 
-  //Validación para el formulario
+  /**
+   * validarMaestro
+   * Valida los campos del formulario de maestro antes de enviarlo al backend.
+   * Recibe el objeto de datos y una bandera que indica si es edición (true) o registro nuevo (false).
+   * En modo edición, los campos de contraseña no son obligatorios.
+   * Se llama en registrar() y actualizar() del componente registro-maestros.ts
+   * Retorna un objeto con los mensajes de error por campo; si está vacío, no hay errores.
+   */
   public validarMaestro(data: any, editar: boolean){
     let error: any = {};
 
@@ -107,6 +121,16 @@ export class MaestrosService {
       error["materias_array"] = "Debes seleccionar materias para poder registrarte";
     }
 
+    if(!this.validatorService.required(data["campus"])){
+      error["campus"] = this.errorService.required;
+    }
+
+    if(!this.validatorService.required(data["sueldo_estimado"])){
+      error["sueldo_estimado"] = this.errorService.required;
+    } else if(!this.validatorService.numeric(data["sueldo_estimado"])){
+      error["sueldo_estimado"] = this.errorService.numeric;
+    }
+
     return error;
   }
 
@@ -118,5 +142,20 @@ export class MaestrosService {
   //Función para obtener la lista de maestros registrados
   public obtenerListaMaestros(): Observable<any> {
     return this.http.get<any>(`${environment.url_api}/lista-maestros/`, { headers: this.getAuthHeaders() });
+  }
+
+  //Función para obtener los datos de un maestro por su id
+  public obtenerMaestroPorId(id: number): Observable<any> {
+    return this.http.get<any>(`${environment.url_api}/maestros/?id=${id}`, { headers: this.getAuthHeaders() });
+  }
+
+  //Función para actualizar los datos de un maestro
+  public actualizarMaestro(data: any): Observable<any> {
+    return this.http.put<any>(`${environment.url_api}/maestros/`, data, { headers: this.getAuthHeaders() });
+  }
+
+  //Función para eliminar un maestro por su id
+  public eliminarMaestro(id: number): Observable<any> {
+    return this.http.delete<any>(`${environment.url_api}/maestros/?id=${id}`, { headers: this.getAuthHeaders() });
   }
 }

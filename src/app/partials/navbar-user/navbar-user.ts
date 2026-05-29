@@ -5,6 +5,14 @@ import { AuthServices } from '../../services/auth-services';
 import { Router } from '@angular/router';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
 
+/**
+ * NavbarUser
+ * ----------------------------------------------------------
+ * Barra de navegación superior del dashboard.
+ * Muestra el inicial del nombre del usuario autenticado y un menú de usuario.
+ * Incluye soporte para modo claro/oscuro (tema con variables CSS) y control
+ * de visibilidad de elementos según el rol del usuario.
+ */
 @Component({
   selector: 'app-navbar-user',
   imports: [
@@ -75,18 +83,22 @@ export class NavbarUser implements OnInit{
     }
   }
 
+  // Alterna el estado abierto/cerrado del sidebar en vista móvil
   toggleSidebar() {
     this.mobileOpen = !this.mobileOpen;
   }
 
+  // Cierra el sidebar en vista móvil
   closeSidebar() {
     this.mobileOpen = false;
   }
 
+  // Alterna la visibilidad del menú de usuario (avatar)
   toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
   }
 
+  // Redirige a la pantalla de edición del usuario autenticado según su rol e id
   editUser() {
     const userId = this.authService.getUserId();
     const userRole = this.authService.getUserGroup();
@@ -94,10 +106,12 @@ export class NavbarUser implements OnInit{
     this.showUserMenu = false;
   }
 
+  // Expande o colapsa un submenú identificado por nombre
   toggleMenu(menu: string) {
     this.expandedMenu = this.expandedMenu === menu ? null : menu;
   }
 
+  // Cierra el submenú activo
   closeMenu() {
     this.expandedMenu = null;
   }

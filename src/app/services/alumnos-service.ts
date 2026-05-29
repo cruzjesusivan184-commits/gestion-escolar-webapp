@@ -26,6 +26,11 @@ export class AlumnosService {
       : new HttpHeaders({ 'Content-Type': 'application/json' });
   }
 
+  /**
+   * esquemaAlumno
+   * Retorna un objeto con la estructura vacía de un alumno.
+   * Se usa en RegistroAlumnos para inicializar el formulario de registro nuevo.
+   */
   public esquemaAlumno(){
     return {
       'rol':'',
@@ -41,10 +46,19 @@ export class AlumnosService {
       'edad': '',
       'telefono': '',
       'ocupacion': '',
+      'direccion': '',
+      'sexo': ''
     }
   }
 
-  //Validación para el formulario
+  /**
+   * validarAlumno
+   * Valida los campos del formulario de alumno antes de enviarlo al backend.
+   * Recibe el objeto de datos y una bandera que indica si es edición (true) o registro nuevo (false).
+   * En modo edición, los campos de contraseña no son obligatorios.
+   * Se llama en registrar() y actualizar() del componente RegistroAlumnos.
+   * Retorna un objeto con los mensajes de error por campo; si está vacío, no hay errores.
+   */
   public validarAlumno(data: any, editar: boolean){
     const error: any = {};
 
@@ -114,11 +128,40 @@ export class AlumnosService {
       error["ocupacion"] = this.errorService.required;
     }
 
+    if(!this.validatorService.required(data["direccion"])){
+      error["direccion"] = this.errorService.required;
+    }
+
+    if(!this.validatorService.required(data["sexo"])){
+      error["sexo"] = this.errorService.required;
+    }
+
     //Return arreglo
     return error;
   }
 
+  // Creamos la petición POST para registrar un alumno nuevo, esta función se llamará en el método registrar() del componente registro-alumnos.ts
   public registrarAlumno(data: any): Observable<any> {
     return this.http.post<any>(`${environment.url_api}/alumnos/`, data, { headers: this.getAuthHeaders() });
+  }
+
+  //Función para obtener la lista de alumnos registrados
+  public obtenerListaAlumnos(): Observable<any> {
+    return this.http.get<any>(`${environment.url_api}/lista-alumnos/`, { headers: this.getAuthHeaders() });
+  }
+
+  //Función para obtener los datos de un alumno por su id
+  public obtenerAlumnoPorId(id: number): Observable<any> {
+    return this.http.get<any>(`${environment.url_api}/alumnos/?id=${id}`, { headers: this.getAuthHeaders() });
+  }
+
+  //Función para actualizar los datos de un alumno
+  public actualizarAlumno(data: any): Observable<any> {
+    return this.http.put<any>(`${environment.url_api}/alumnos/`, data, { headers: this.getAuthHeaders() });
+  }
+
+  //Función para eliminar un alumno por su id
+  public eliminarAlumno(id: number): Observable<any> {
+    return this.http.delete<any>(`${environment.url_api}/alumnos/?id=${id}`, { headers: this.getAuthHeaders() });
   }
 }

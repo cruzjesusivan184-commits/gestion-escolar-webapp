@@ -93,6 +93,26 @@
         <div class="invalid-feedback">{{ errors.ocupacion }}</div>
       }
 
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Categoría</mat-label>
+        <mat-select [(ngModel)]="admin.categoria" name="categoria">
+          <mat-option value="Tiempo Completo">Tiempo Completo</mat-option>
+          <mat-option value="Medio Tiempo">Medio Tiempo</mat-option>
+          <mat-option value="Hora-Clase">Hora-Clase</mat-option>
+        </mat-select>
+      </mat-form-field>
+      @if (errors.categoria) {
+        <div class="invalid-feedback">{{ errors.categoria }}</div>
+      }
+
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Grado académico</mat-label>
+        <input matInput [(ngModel)]="admin.grado_academico" name="grado_academico" placeholder="Escribe grado académico del administrador">
+      </mat-form-field>
+      @if (errors.grado_academico) {
+        <div class="invalid-feedback">{{ errors.grado_academico }}</div>
+      }
+
       <!-- En esta clase se definen los botones para guardar o actualizar el registro -->
       <div class="section-buttons">
         <button class="btn btn-danger" (click)="regresar()">Cancelar</button>

@@ -4,7 +4,19 @@ import { AuthServices } from '../../services/auth-services';
 import { Router } from '@angular/router';
 import { AdministradoresService } from '../../services/administradores-service';
 import { NotificationService } from '../../services/tools/notification-service';
+import { MatDialog } from '@angular/material/dialog';
+import { EliminarUserModal } from '../../modals/eliminar-user-modal/eliminar-user-modal';
 
+/**
+ * AdminScreen
+ * ----------------------------------------------------------
+ * Pantalla de gestión de administradores del sistema.
+ * Muestra una tabla con todos los administradores registrados y
+ * permite editar o desactivar (eliminar) cada uno mediante CRUD.
+ *
+ * Ruta: /administrador
+ * Endpoint(s) consumido(s): GET /lista-admins/, PATCH /admins/ (eliminar)
+ */
 @Component({
   selector: 'app-admin-screen',
   imports: [
@@ -23,6 +35,7 @@ export class AdminScreen implements OnInit{
     private notificationService: NotificationService,
     private administradoresService: AdministradoresService,
     private router: Router,
+    private dialog: MatDialog,
   ) {
   }
 
@@ -49,7 +62,14 @@ export class AdminScreen implements OnInit{
 
   //Metodo para eliminar un administrador, se muestra una confirmación antes de eliminar
   public delete(id: number): void {
-
+    const dialogRef = this.dialog.open(EliminarUserModal, {
+      data: { id: id, tipo: 'administrador' }
+    });
+    dialogRef.afterClosed().subscribe((resultado) => {
+      if (resultado) {
+        this.obtenerAdministradores();
+      }
+    });
   }
 
 }

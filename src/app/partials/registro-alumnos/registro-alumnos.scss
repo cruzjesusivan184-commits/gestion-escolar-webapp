@@ -1,3 +1,11 @@
+/* ============================================================
+   registro-alumnos.scss
+   Estilos del formulario de registro y edición de alumnos.
+   Reutiliza la misma estructura de layout que registro-admin.scss
+   (wrapper > section-registro > body-registro) con ajustes móvil (≤700px).
+   ============================================================ */
+
+/* Contenedor raíz del formulario */
 .wrapper {
   width: 100%;
   min-height: 100vh;

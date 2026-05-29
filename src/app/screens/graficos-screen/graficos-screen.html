@@ -1,0 +1,96 @@
+<!-- Contenedor principal que aplica el margen del sidebar -->
+<div class="wrapper main-content-graficas">
+  <div class="section-home">
+    <div class="header-home"></div>
+
+    <!-- Cuerpo principal de la pantalla de gráficas -->
+    <div class="body-home">
+
+      <!-- Título principal de la sección -->
+      <div class="row mt-5 mb-5">
+        <div class="col-12">
+          <span class="title-perfil">Análisis De Usuarios Del Sistema</span>
+        </div>
+      </div>
+
+      <div class="container">
+
+        <!-- ── SECCIÓN 1: Eventos Académicos ──────────────────────── -->
+        <div class="row mt-3 mb-5" style="text-align: center;">
+          <div class="col-12">
+            <div class="alert alert-primary" role="alert">
+              <span class="title-table">Análisis De Eventos Académicos</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid con gráfica de línea y gráfica de barras -->
+        <div class="graph-section">
+
+          <!-- Gráfica tipo histograma (line): usuarios por rol -->
+          <div class="graph">
+            <canvas
+              baseChart
+              type="line"
+              [data]="lineChartData"
+              [plugins]="lineChartPlugins"
+              [options]="lineChartOption">
+            </canvas>
+          </div>
+
+          <!-- Gráfica tipo barras (bar): eventos académicos registrados -->
+          <div class="graph">
+            <canvas
+              baseChart
+              type="bar"
+              [data]="barChartData"
+              [plugins]="barChartPlugins"
+              [options]="barChartOption">
+            </canvas>
+          </div>
+
+        </div><!-- /graph-section -->
+
+        <!-- ── SECCIÓN 2: Análisis de Usuarios ───────────────────── -->
+        <div class="row mt-3 mb-5" style="text-align: center;">
+          <div class="col-12">
+            <div class="alert alert-primary" role="alert">
+              <span class="title-table">Análisis De Usuarios</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid con gráfica de pastel y gráfica de dona -->
+        <div class="user-section">
+
+          <!-- Gráfica tipo pastel (pie): distribución de usuarios por rol -->
+          <div class="graph">
+            <canvas
+              baseChart
+              type="pie"
+              [data]="pieChartData"
+              [plugins]="pieChartPlugins"
+              [options]="pieChartOption">
+            </canvas>
+          </div>
+
+          <!-- Gráfica tipo dona (doughnut): distribución de usuarios por rol -->
+          <div class="graph">
+            <canvas
+              baseChart
+              type="doughnut"
+              [data]="doughnutChartData"
+              [plugins]="doughnutChartPlugins"
+              [options]="doughnutChartOption">
+            </canvas>
+          </div>
+
+        </div><!-- /user-section -->
+
+      </div><!-- /container -->
+
+    </div><!-- /body-home -->
+
+  </div><!-- /section-home -->
+
+</div><!-- /wrapper -->

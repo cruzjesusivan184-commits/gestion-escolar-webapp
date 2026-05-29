@@ -1,3 +1,11 @@
+/**
+ * getSpanishPaginatorIntl
+ * ----------------------------------------------------------
+ * Función de fábrica que sobrescribe las etiquetas del MatPaginator
+ * de Angular Material con su traducción al español.
+ * Se registra en app.config.ts mediante:
+ *   { provide: MatPaginatorIntl, useFactory: getSpanishPaginatorIntl }
+ */
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
 export function getSpanishPaginatorIntl() {

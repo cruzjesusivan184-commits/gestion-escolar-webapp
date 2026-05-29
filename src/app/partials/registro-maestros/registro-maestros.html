@@ -1,4 +1,6 @@
-<!-- Formulario de registro para administradores -->
+<!-- Formulario de registro y edición de maestros.
+     En modo registro muestra campos de contraseña; en modo edición los oculta (@if !editar).
+     Los checkboxes de materias usan checkboxChange() para actualizar materias_array. -->
 <div class="wrapper">
   <div class="section-registro">
     <div class="body-registro">
@@ -123,6 +125,27 @@
           <div class="invalid-feedback">{{ errors.materias_array }}</div>
         }
       </div>
+
+      <div class="mat-input" style="margin-bottom: 16px;">
+        <label style="font-weight: 500; display: block; margin-bottom: 8px;">Campus</label>
+        <mat-radio-group [(ngModel)]="maestro.campus" name="campus" style="display: flex; gap: 24px;">
+          <mat-radio-button value="CU San Manuel">CU San Manuel</mat-radio-button>
+          <mat-radio-button value="CU2">CU2</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      @if (errors.campus) {
+        <div class="invalid-feedback">{{ errors.campus }}</div>
+      }
+
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Sueldo estimado</mat-label>
+        <span matTextPrefix>$&nbsp;</span>
+        <input matInput [(ngModel)]="maestro.sueldo_estimado" name="sueldo_estimado" type="number" min="0" placeholder="0.00">
+      </mat-form-field>
+      @if (errors.sueldo_estimado) {
+        <div class="invalid-feedback">{{ errors.sueldo_estimado }}</div>
+      }
+
       <!-- En esta clase se definen los botones para guardar o actualizar el registro -->
       <div class="section-buttons">
         <button class="btn btn-danger" (click)="regresar()">Cancelar</button>

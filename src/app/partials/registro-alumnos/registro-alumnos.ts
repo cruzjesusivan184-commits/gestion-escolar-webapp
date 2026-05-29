@@ -5,6 +5,15 @@ import { AlumnosService } from '../../services/alumnos-service';
 import { NotificationService } from '../../services/tools/notification-service';
 import { Location } from '@angular/common';
 
+/**
+ * RegistroAlumnos
+ * ----------------------------------------------------------
+ * Formulario de registro y edición de alumnos.
+ * Recibe los datos del usuario por @Input cuando está en modo edición.
+ * En modo registro inicializa el esquema vacío desde AlumnosService.
+ *
+ * Endpoint(s) consumido(s): POST /alumnos/, PUT /alumnos/
+ */
 @Component({
   selector: 'app-registro-alumnos',
   imports: [
@@ -38,10 +47,18 @@ export class RegistroAlumnos implements OnInit{
   ) {
   }
 
-  ngOnInit(): void {
-    this.alumno = this.alumnosService.esquemaAlumno();
-    // Rol del usuario
-    this.alumno.rol = this.rol;
+ ngOnInit(): void {
+    if(this.activatedRoute.snapshot.params['id'] !== undefined){
+      this.editar = true;
+      // Asignamos a nuestra variable global el valor del ID que viene por la URL
+      this.idUser = this.activatedRoute.snapshot.params['id'];
+      // Asignamos los datos del usuario que vienen desde la vista principal con el decorador
+      this.alumno = this.datos_user;
+    }else{
+      // Si no va a editar, entonces inicializamos el JSON para registro nuevo
+      this.alumno = this.alumnosService.esquemaAlumno();
+      this.alumno.rol = this.rol;
+    }
   }
 
   public regresar(){
@@ -75,11 +92,26 @@ export class RegistroAlumnos implements OnInit{
     }
   }
 
-  public actualizar(){
-    // Lógica para actualizar los datos de un alumno existente
+ public actualizar(){
+    this.errors = {};
+    this.errors = this.alumnosService.validarAlumno(this.alumno, this.editar);
+    if(Object.keys(this.errors).length > 0){
+      return;
+    }
+    this.alumno.id = this.idUser;
+    this.alumnosService.actualizarAlumno(this.alumno).subscribe({
+      next: (response) => {
+        this.notificationService.success("Alumno actualizado exitosamente");
+        this.router.navigate(['/alumnos']);
+      },
+      error: (error) => {
+        console.error("Error al actualizar el alumno: ", error);
+        this.notificationService.error("Error al actualizar el alumno.");
+      }
+    });
   }
 
-  //Funciones para password
+  //Funciones para alternar la visibilidad del campo de contraseña
   showPassword()
   {
     if(this.inputType_1 === 'password'){
@@ -109,6 +141,7 @@ export class RegistroAlumnos implements OnInit{
     this.alumno.fecha_nacimiento = event.value.toISOString().split("T")[0];
   }
 
+  // Restringe la entrada de teclado solo a letras (mayúsculas, minúsculas) y espacio
   public soloLetras(event: KeyboardEvent) {
     const charCode = event.key.charCodeAt(0);
     // Permitir solo letras (mayúsculas y minúsculas) y espacio

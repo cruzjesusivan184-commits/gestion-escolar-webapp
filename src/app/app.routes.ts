@@ -1,3 +1,13 @@
+/**
+ * app.routes.ts
+ * ----------------------------------------------------------
+ * Define las rutas principales de la aplicación Angular.
+ * Estructura:
+ *   - AuthLayout: rutas públicas (/login, /registro-usuarios, /registro-usuarios/:rol/:id)
+ *   - DashboardLayout + AuthGuard: rutas protegidas (/home, /administrador, /alumnos, /maestros, /graficas)
+ *   - Wildcard (**): redirige a /login
+ * Todos los componentes se cargan de forma lazy (loadComponent) para optimizar el bundle.
+ */
 import { Routes } from '@angular/router';
 import { AuthLayout } from './layouts/auth-layout/auth-layout';
 import { DashboardLayout } from './layouts/dashboard-layout/dashboard-layout';
@@ -47,6 +57,10 @@ export const routes: Routes = [
         path: 'maestros',
         loadComponent: () => import('./screens/maestros-screen/maestros-screen').then(m => m.MaestrosScreen),
       },
+      {
+        path: 'graficas',
+        loadComponent: () => import('./screens/graficos-screen/graficos-screen').then(m => m.GraficosScreen),
+    },
     ]
   },
 
